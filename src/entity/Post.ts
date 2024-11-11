@@ -16,4 +16,5 @@ export class Post {
     @ManyToOne(() => User, (user) => user.posts)
     @JoinColumn({name: "user_id"})
     user!: User;
+ 
 }
