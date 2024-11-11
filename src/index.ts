@@ -34,11 +34,21 @@ const initializeDatabase = async () => {
 initializeDatabase();
 
 app.post('/users', async (req, res) => {
-// Crie o endpoint de users
+  try {
+      const users = await userRepository.find();
+      res.json(users);
+    } catch (error) {
+      res.status(500).json({ message: "Error fetching users", error });
+    }
 });
 
 app.post('/posts', async (req, res) => {
-// Crie o endpoint de posts
+  try {
+      const posts = await postRepository.find({ relations: ["user"] });
+      res.json(posts);
+    } catch (error) {
+      res.status(500).json({ message: "Error fetching posts", error });
+    }
 });
 
 const PORT = process.env.PORT || 3000;
