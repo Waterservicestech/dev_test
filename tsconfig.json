@@ -11,6 +11,6 @@
     "experimentalDecorators": true,
     "skipLibCheck": true
   },
-  "include": ["src/**/*", "src/db.test.ts"],
+  "include": ["src/**/*", "src/tests/db.test.ts"],
   "exclude": ["node_modules"]
 }
