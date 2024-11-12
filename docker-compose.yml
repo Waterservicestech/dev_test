@@ -12,7 +12,8 @@ services:
       - DB_NAME=test_db
     depends_on:
       - db
-
+    volumes:
+      - .:/node/app
 
   db:
     image: mysql:8.0
