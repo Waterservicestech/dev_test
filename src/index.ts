@@ -35,10 +35,32 @@ initializeDatabase();
 
 app.post('/users', async (req, res) => {
 // Crie o endpoint de users
+  const { firstName, lastName, email } = req.body;
+  const user = new User();
+  user.firstName = firstName;
+  user.lastName = lastName;
+  user.email = email;
+  try {
+    await AppDataSource.getRepository(User).save(user);
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ error: "Error saving user" });
+  }
 });
 
 app.post('/posts', async (req, res) => {
 // Crie o endpoint de posts
+  const { title, description, userId } = req.body;
+  const post = new Post();
+  post.title = title;
+  post.description = description;
+  post.userId = userId;
+  try {
+    await AppDataSource.getRepository(Post).save(post);
+    res.json(post);
+  } catch (err) {
+    res.status(500).json({ error: "Error saving post" });
+  }
 });
 
 const PORT = process.env.PORT || 3000;
