@@ -14,7 +14,7 @@ const AppDataSource = new DataSource({
   username: process.env.DB_USER || "root",
   password: process.env.DB_PASSWORD || "password",
   database: process.env.DB_NAME || "test_db",
-  entities: [User,Post],
+  entities: [User, Post],
   synchronize: true,
 });
 
@@ -33,15 +33,46 @@ const initializeDatabase = async () => {
 
 initializeDatabase();
 
+app.get('/users', async (req, res) => {
+  try {
+    const users = await AppDataSource.getRepository(User).find();
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching users' });
+  }
+});
+
 app.post('/users', async (req, res) => {
-// Crie o endpoint de users
+  try {
+    const user = AppDataSource.getRepository(User).create(req.body);
+    const result = await AppDataSource.getRepository(User).save(user);
+    res.status(201).json(result);
+  } catch (error) {
+    res.status(500).json({ message: 'Error creating user' });
+  }
+});
+
+app.get('/posts', async (req, res) => {
+  try {
+    const posts = await AppDataSource.getRepository(Post).find({ relations: ['user'] });
+    res.json(posts);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching posts' });
+  }
 });
 
 app.post('/posts', async (req, res) => {
-// Crie o endpoint de posts
+  try {
+    const post = AppDataSource.getRepository(Post).create(req.body);
+    const result = await AppDataSource.getRepository(Post).save(post);
+    res.status(201).json(result);
+  } catch (error) {
+    res.status(500).json({ message: 'Error creating post' });
+  }
 });
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
