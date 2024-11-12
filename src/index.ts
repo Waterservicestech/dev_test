@@ -35,10 +35,51 @@ initializeDatabase();
 
 app.post('/users', async (req, res) => {
 // Crie o endpoint de users
+try {
+    // Extrai os dados do corpo da requisição
+    const { firstName, lastName, email } = req.body;   
+
+    let DB: User[] = [];    
+
+    // Cria uma nova instância de User
+    const newUser = new User();  
+    newUser.firstName = firstName;
+    newUser.lastName = lastName;
+    newUser.email = email;
+
+    DB.push(newUser);   
+
+    // Retorna o usuário criado no corpo da resposta
+    res.status(201).json(newUser);
+  } catch (error) {
+    console.error("Erro ao criar usuário:", error);
+    res.status(500).json({ message: "Erro interno do servidor." });
+  }
 });
 
 app.post('/posts', async (req, res) => {
 // Crie o endpoint de posts
+
+try {
+  // Extrai os dados do corpo da requisição
+  const { title, description, userId } = req.body; 
+
+  let DB: Post[] = [];
+
+  // Cria uma nova instância de User
+  const newPost = new Post();  
+  newPost.title = title;
+  newPost.description = description;
+  newPost.userId = userId;
+
+  DB.push(newPost);  
+
+  // Retorna o usuário criado no corpo da resposta
+  res.status(201).json(newPost);
+} catch (error) {
+  console.error("Erro ao criar post:", error);
+  res.status(500).json({ message: "Erro interno do servidor." });
+}
 });
 
 const PORT = process.env.PORT || 3000;
