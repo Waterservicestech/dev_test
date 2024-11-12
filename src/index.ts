@@ -34,11 +34,55 @@ const initializeDatabase = async () => {
 initializeDatabase();
 
 app.post('/users', async (req, res) => {
-// Crie o endpoint de users
+  // Crie o endpoint de users
+
+  const { firstName, lastName, email } = req.body;
+
+  try {
+    const userRepository = AppDataSource.getRepository(User);
+    const userWithSameEmail = await userRepository.findOne({ where: { email: email } });
+
+    if (userWithSameEmail) {
+      return res.status(422).json({ error: 'Email is already in use' });
+    }
+
+    const user = new User();
+    user.firstName = firstName;
+    user.lastName = lastName;
+    user.email = email;
+
+    const savedUser = await userRepository.save(user);
+    return res.status(201).json(savedUser);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Error creating user' });
+  }
 });
 
 app.post('/posts', async (req, res) => {
-// Crie o endpoint de posts
+  // Crie o endpoint de posts
+
+  const { title, description, userId } = req.body;
+
+  try {
+    const userRepository = AppDataSource.getRepository(User);
+    const user = await userRepository.findOne({ where: { id: userId } });
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const post = new Post();
+    post.title = title;
+    post.description = description;
+    post.user = user;
+
+    const savedPost = await AppDataSource.getRepository(Post).save(post);
+    return res.status(201).json(savedPost);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Error creating post' });
+  }
 });
 
 const PORT = process.env.PORT || 3000;
