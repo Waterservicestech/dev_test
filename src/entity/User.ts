@@ -5,30 +5,39 @@ import { Post } from "./Post";
 
 @Entity()
 export class User {
-    @PrimaryGeneratedColumn()
-    id!: number; // o ! no id é para informar ao TS que o 'id' não é nulo, mesmo sem inicialização explícita.
+  @PrimaryGeneratedColumn()
+  id!: number; // o ! no id é para informar ao TS que o 'id' não é nulo, mesmo sem inicialização explícita.
 
-    @Column()
-    firstName: string;
+  @Column({
+    type: "varchar",
+    length: 100,
+    nullable: false,
+  })
+  firstName: string;
 
-    @Column()
-    lastName: string;
+  @Column({
+    type: "varchar",
+    length: 100,
+    nullable: false,
+  })
+  lastName: string;
 
-    @Column({ unique: true })
-    email: string;
+  @Column({
+    type: "varchar",
+    length: 100,
+    nullable: false,
+    unique: true
+  })
+  email: string;
 
-    // Relacionamento um-para-muitos: Um usuário pode ter muitos posts
-    @OneToMany(() => Post, (post) => post.user)
-    posts: Post[] = []; // A coleção de posts do usuário e inicializando posts com um array vazio.
+  // Relacionamento um-para-muitos: Um usuário pode ter muitos posts
+  @OneToMany(() => Post, (post) => post.user)
+  posts: Post[] = []; // A coleção de posts do usuário e inicializando posts com um array vazio.
 
-    // Construtor para inicializar as propriedades
-    constructor(
-        firstName: string, 
-        lastName: string, 
-        email: string
-    ) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-    }    
+  // Construtor para inicializar as propriedades
+  constructor(firstName: string, lastName: string, email: string) {
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.email = email;
+  }
 }
