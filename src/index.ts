@@ -67,7 +67,34 @@ app.post('/users', async (req, res) => {
 });
 
 app.post('/posts', async (req, res) => {
+  const { title, description, userId } = req.body;
   
+    if (!title) {
+      return res.status(400).json({ error: 'Please provide a title' });
+    } 
+    if (!description) {
+      return res.status(400).json({ error: 'Please provide a description' });
+    }
+    if (!userId) {
+      return res.status(400).json({ error: 'Please provide a userId' });
+    }
+    
+    // validar se userId existe
+
+    try {
+      const posts = new Post();
+      posts.title = title;
+      posts.description = description;
+      posts.userId = userId;
+
+      const userRepository = AppDataSource.getRepository(Post);
+      const savedPost = await userRepository.save(posts);
+
+      res.status(201).json(savedPost);
+
+    } catch (error) {
+      res.status(500).json({ error: 'Error creating post' });
+    }
 });
 
 const PORT = process.env.PORT || 3000;
