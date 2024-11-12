@@ -1,8 +1,8 @@
-import 'reflect-metadata';
-import express from 'express';
-import { DataSource } from 'typeorm';
-import { User } from './entity/User';
-import { Post } from './entity/Post';
+import "reflect-metadata";
+import express from "express";
+import { DataSource } from "typeorm";
+import { User } from "./entity/User";
+import { Post } from "./entity/Post";
 
 const app = express();
 app.use(express.json());
@@ -14,11 +14,11 @@ const AppDataSource = new DataSource({
   username: process.env.DB_USER || "root",
   password: process.env.DB_PASSWORD || "password",
   database: process.env.DB_NAME || "test_db",
-  entities: [User,Post],
+  entities: [User, Post],
   synchronize: true,
 });
 
-const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const initializeDatabase = async () => {
   await wait(20000);
@@ -33,12 +33,84 @@ const initializeDatabase = async () => {
 
 initializeDatabase();
 
-app.post('/users', async (req, res) => {
-// Crie o endpoint de users
+app.post("/users", async (req, res) => {
+  try {
+    const { firstName, lastName, email } = req.body;
+
+    if (!firstName || !lastName || !email) {
+      return res.status(400).json({
+        error: "firstName, lastName and email are required",
+      });
+    }
+
+    const userRepository = AppDataSource.getRepository(User);
+    const existingUser = await userRepository.findOne({
+      where: { email },
+    });
+
+    if (existingUser) {
+      return res.status(400).json({
+        error: `User with this email ${email} already exists`,
+      });
+    }
+
+    const user = userRepository.create({
+      firstName,
+      lastName,
+      email,
+    });
+
+    await userRepository.save(user);
+
+    return res.status(201).json(user);
+  } catch (err) {
+    console.error("Error creating user: ", err);
+
+    return res.status(500).json({
+      error: "Internal server error",
+    });
+  }
 });
 
-app.post('/posts', async (req, res) => {
-// Crie o endpoint de posts
+app.post("/posts", async (req, res) => {
+  try {
+    const { title, description, userId } = req.body;
+
+    if (!title || !description || !userId) {
+      return res.status(400).json({
+        error: "title, description and userId are required",
+      });
+    }
+
+    const userRepository = AppDataSource.getRepository(User);
+    const postRepository = AppDataSource.getRepository(Post);
+
+    const user = await userRepository.findOne({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        error: `User with userId ${userId} was not found`,
+      });
+    }
+
+    const post = postRepository.create({
+      title,
+      description,
+      user,
+    });
+
+    await postRepository.save(post);
+
+    return res.status(201).json(post);
+  } catch (err) {
+    console.error("Error creating post: ", err);
+
+    res.status(500).json({
+      error: "Internal server error",
+    });
+  }
 });
 
 const PORT = process.env.PORT || 3000;
