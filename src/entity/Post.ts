@@ -26,8 +26,8 @@ export class Post {
   userId?: number;
 
   // Relacionamento muitos-para-um: Muitos posts pertencem a um único usuário
-  @ManyToOne(() => User, (user) => user.posts)
-  user?: User; // O usuário que criou o post
+  @ManyToOne(() => User, (user) => user.posts, { onDelete: "CASCADE" })
+  user?: User;
 
   // Construtor para inicializar as propriedades
   constructor(title: string, description: string, userId?: number) {

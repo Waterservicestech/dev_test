@@ -14,7 +14,7 @@ const AppDataSource = new DataSource({
   username: process.env.DB_USER || "root",
   password: process.env.DB_PASSWORD || "password",
   database: process.env.DB_NAME || "test_db",
-  entities: [User,Post],
+  entities: [User, Post],
   synchronize: true,
 });
 
@@ -41,45 +41,36 @@ app.post('/users', async (req, res) => {
   }
 
   try {
-    const userRepository = AppDataSource.getRepository(User);
-
-    const newUser = new User(firstName, lastName, email);
+    const newUser = new User();    
+    newUser.firstName = firstName;
+    newUser.lastName = lastName;
+    newUser.email = email;
     
-    await userRepository.save(newUser);
+    const savedUser = await AppDataSource.manager.save(newUser);
     
-    return res.status(201).json(newUser);
+    return res.status(201).json(savedUser);
   } catch (error) {
     console.error("Error creating user:", error);
-    return res.status(500).json({ message: "Failed to create user"});
+    return res.status(500).json({ message: "Failed to create user!"});
   }
 });
 
 app.post('/posts', async (req, res) => {
   const { title, description, userId } = req.body;
-
-  if (!title || !description || !userId) {
-    return res.status(400).json({ message: "Missing required fields" });
-  }
-
   try {
-    const postRepository = AppDataSource.getRepository(Post);
-    const userRepository = AppDataSource.getRepository(User);
-
-    const user = await userRepository.findOneBy({ id: userId });
-
+    const user = await AppDataSource.manager.findOne(User, { where: { id: userId } });
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: "Error, User not found!" });
     }
-
-    const newPost = new Post(title, description, userId);
-    newPost.user = user;
-
-    await postRepository.save(newPost);
-
-    return res.status(201).json(newPost);
+    const post = new Post(title, description, userId);
+    post.title = title;
+    post.description = description;
+    post.user = user;
+    const savedPost = await AppDataSource.manager.save(post);
+    res.status(201).json(savedPost);
   } catch (error) {
     console.error("Error creating post:", error);
-    return res.status(500).json({ message: "Error creating post" });
+    res.status(500).json({ message: "Error creating post" });
   }
 });
 
