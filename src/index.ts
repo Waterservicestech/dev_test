@@ -8,25 +8,25 @@ const app = express();
 app.use(express.json());
 
 const AppDataSource = new DataSource({
-  type: "mysql",
-  host: process.env.DB_HOST || "localhost",
+  type: 'mysql',
+  host: process.env.DB_HOST || 'localhost',
   port: 3306,
-  username: process.env.DB_USER || "root",
-  password: process.env.DB_PASSWORD || "password",
-  database: process.env.DB_NAME || "test_db",
-  entities: [User,Post],
+  username: process.env.DB_USER || 'root',
+  password: process.env.DB_PASSWORD || 'password',
+  database: process.env.DB_NAME || 'test_db',
+  entities: [User, Post],
   synchronize: true,
 });
 
-const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const initializeDatabase = async () => {
   await wait(20000);
   try {
     await AppDataSource.initialize();
-    console.log("Data Source has been initialized!");
+    console.log('Data Source has been initialized!');
   } catch (err) {
-    console.error("Error during Data Source initialization:", err);
+    console.error('Error during Data Source initialization:', err);
     process.exit(1);
   }
 };
@@ -34,11 +34,15 @@ const initializeDatabase = async () => {
 initializeDatabase();
 
 app.post('/users', async (req, res) => {
-// Crie o endpoint de users
+  await AppDataSource.manager.save(User, req.body);
+
+  return res.end();
 });
 
 app.post('/posts', async (req, res) => {
-// Crie o endpoint de posts
+  await AppDataSource.manager.save(Post, req.body);
+
+  return res.end();
 });
 
 const PORT = process.env.PORT || 3000;
