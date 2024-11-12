@@ -6,7 +6,7 @@ import { Post } from "./Post";
 @Entity()
 export class User {
     @PrimaryGeneratedColumn()
-    id: number;
+    id!: number; // o ! no id é para informar ao TS que o 'id' não é nulo, mesmo sem inicialização explícita.
 
     @Column()
     firstName: string;
@@ -23,12 +23,10 @@ export class User {
 
     // Construtor para inicializar as propriedades
     constructor(
-        id: number,
         firstName: string, 
         lastName: string, 
         email: string
     ) {
-        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
