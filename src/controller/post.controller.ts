@@ -1,6 +1,12 @@
 import { Request, Response } from 'express';
 import { PostService } from '../service/post.service';
 
+/**
+ * @swagger
+ * tags:
+ *   name: Posts
+ *   description: Operações relacionadas aos posts
+ */
 export class PostController {
   private postService: PostService;
 
@@ -8,6 +14,35 @@ export class PostController {
     this.postService = new PostService();
   }
 
+  /**
+   * @swagger
+   * /posts:
+   *   post:
+   *     summary: Cria um novo post
+   *     description: Adiciona um novo post ao sistema.
+   *     tags:
+   *       - Posts
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             properties:
+   *               title:
+   *                 type: string
+   *               content:
+   *                 type: string
+   *     responses:
+   *       201:
+   *         description: Post criado com sucesso.
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/Post'
+   *       500:
+   *         description: Erro ao criar o post.
+   */
   async createPost(req: Request, res: Response): Promise<Response> {
     try {
       const post = await this.postService.createPost(req.body);
@@ -18,6 +53,26 @@ export class PostController {
     }
   }
 
+  /**
+   * @swagger
+   * /posts:
+   *   get:
+   *     summary: Retorna todos os posts
+   *     description: Obtém uma lista de todos os posts.
+   *     tags:
+   *       - Posts
+   *     responses:
+   *       200:
+   *         description: Lista de posts retornada com sucesso.
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: array
+   *               items:
+   *                 $ref: '#/components/schemas/Post'
+   *       500:
+   *         description: Erro ao buscar os posts.
+   */
   async getPosts(req: Request, res: Response): Promise<Response> {
     try {
       const posts = await this.postService.getPosts();
@@ -28,6 +83,33 @@ export class PostController {
     }
   }
 
+  /**
+   * @swagger
+   * /posts/{id}:
+   *   get:
+   *     summary: Retorna um post por ID
+   *     description: Busca um post específico pelo ID.
+   *     tags:
+   *       - Posts
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         description: ID do post.
+   *         schema:
+   *           type: integer
+   *     responses:
+   *       200:
+   *         description: Post encontrado com sucesso.
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/Post'
+   *       404:
+   *         description: Post não encontrado.
+   *       500:
+   *         description: Erro ao buscar o post.
+   */
   async getPostById(req: Request, res: Response): Promise<Response> {
     try {
       const post = await this.postService.getPostById(Number(req.params.id));

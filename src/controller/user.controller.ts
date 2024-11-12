@@ -1,6 +1,12 @@
 import { Request, Response } from 'express';
 import { UserService } from '../service/user.service';
 
+/**
+ * @swagger
+ * tags:
+ *   name: Users
+ *   description: Operações relacionadas aos usuários
+ */
 export class UserController {
   private userService: UserService;
 
@@ -8,6 +14,28 @@ export class UserController {
     this.userService = new UserService();
   }
 
+  /**
+   * @swagger
+   * /users:
+   *   post:
+   *     summary: Cria um novo usuário
+   *     tags: [Users]
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             $ref: '#/components/schemas/User'
+   *     responses:
+   *       201:
+   *         description: Usuário criado com sucesso
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/User'
+   *       500:
+   *         description: Erro ao criar usuário
+   */
   async createUser(req: Request, res: Response): Promise<Response> {
     try {
       const user = await this.userService.createUser(req.body);
@@ -18,6 +46,24 @@ export class UserController {
     }
   }
 
+  /**
+   * @swagger
+   * /users:
+   *   get:
+   *     summary: Retorna uma lista de usuários
+   *     tags: [Users]
+   *     responses:
+   *       200:
+   *         description: Lista de usuários
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: array
+   *               items:
+   *                 $ref: '#/components/schemas/User'
+   *       500:
+   *         description: Erro ao buscar usuários
+   */
   async getUsers(req: Request, res: Response): Promise<Response> {
     try {
       const users = await this.userService.getUsers();
@@ -27,6 +73,31 @@ export class UserController {
     }
   }
 
+  /**
+   * @swagger
+   * /users/{id}:
+   *   get:
+   *     summary: Retorna um usuário pelo ID
+   *     tags: [Users]
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema:
+   *           type: integer
+   *         description: ID do usuário
+   *     responses:
+   *       200:
+   *         description: Usuário encontrado
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/User'
+   *       404:
+   *         description: Usuário não encontrado
+   *       500:
+   *         description: Erro ao buscar usuário
+   */
   async getUserById(req: Request, res: Response): Promise<Response> {
     try {
       const user = await this.userService.getUserById(Number(req.params.id));
