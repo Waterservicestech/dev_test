@@ -2,19 +2,19 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
 import { Post } from "./Post";
 
 @Entity('user')
-export class User{
+export class User {
     @PrimaryGeneratedColumn()
-    id: number
+    id!: number
 
     @Column({length: 100, nullable: false})
-    firstName: string
+    firstName!: string
 
     @Column({length: 100, nullable: false})
-    lastName: string
+    lastName!: string
 
     @Column({length: 100, nullable: false})
-    email: string
+    email!: string
 
-    @OneToMany(() => Post, (post) => post.userId)
+    @OneToMany(() => Post, (post) => post.user)
     posts!: Post[]
 }
