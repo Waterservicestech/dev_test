@@ -110,4 +110,35 @@ export class UserController {
       return res.status(500).json({ message: 'Error fetching user', error: error });
     }
   }
+
+  /**
+   * @swagger
+   * /users/{id}:
+   *   delete:
+   *     summary: Exclui um usuário pelo ID
+   *     description: Exclui um usuário pelo ID
+   *     tags: 
+   *       - Users
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema:
+   *           type: integer
+   *         description: ID do usuário
+   *     responses:
+   *       200:
+   *         description: Usuário excluído com sucesso
+   *       500:
+   *         description: Erro ao excluir usuário
+   */
+  async deleteUserById(req: Request, res: Response): Promise<Response> {
+    try {
+      await this.userService.deleteUserById(Number(req.params.id));
+      return res.status(200).json({ message: 'User deleted successfully' });
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      return res.status(500).json({ message: 'Error deleting user', error: error });
+    }
+  }
 }

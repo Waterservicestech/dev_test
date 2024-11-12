@@ -31,4 +31,14 @@ export class UserService {
     }
     return user;
   }
+
+  // Deleta um usuário por ID.
+  async deleteUserById(id: number): Promise<void> {
+    const user =await userRepository().findOneBy({id});
+    if (!user) {
+      throw new Error('Usuário nao encontrado');
+    }
+
+    await userRepository().remove(user);
+  }
 }

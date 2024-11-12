@@ -13,7 +13,17 @@
 					"name": "Request All Users",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "{{host}}/users/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users",
+								""
+							]
+						}
 					},
 					"response": []
 				},
@@ -21,7 +31,18 @@
 					"name": "Request User By ID",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": "{{host}}/users/id/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users",
+								"id",
+								""
+							]
+						}
 					},
 					"response": []
 				},
@@ -40,14 +61,32 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/users",
-							"protocol": "http",
+							"raw": "{{host}}/users/",
 							"host": [
-								"localhost"
+								"{{host}}"
 							],
-							"port": "3000",
 							"path": [
-								"users"
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User By ID",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/users/id/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users",
+								"id",
+								""
 							]
 						}
 					},
@@ -65,13 +104,12 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{host}}/posts/1/",
+							"raw": "{{host}}/posts/",
 							"host": [
 								"{{host}}"
 							],
 							"path": [
 								"posts",
-								"1",
 								""
 							]
 						}
@@ -118,6 +156,25 @@
 							],
 							"path": [
 								"posts",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Post By ID",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/posts/id/",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"posts",
+								"id",
 								""
 							]
 						}

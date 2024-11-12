@@ -78,12 +78,14 @@ const postController = new PostController();
 app.post("/users", userController.createUser.bind(userController));
 app.get("/users", userController.getUsers.bind(userController));
 app.get("/users/:id", userController.getUserById.bind(userController));
+app.delete("/users/:id", userController.deleteUserById.bind(userController));
 
 
 // Configura os endpoints para lidar com requisições de posts.
 app.post("/posts", postController.createPost.bind(postController));
 app.get("/posts", postController.getPosts.bind(postController));
 app.get("/posts/:id", postController.getPostById.bind(postController));
+app.delete("/posts/:id", postController.deletePostById.bind(postController));
 
 // Configura a porta para ouvir requisições.
 const PORT = process.env.PORT || 3000;

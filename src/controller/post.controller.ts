@@ -122,4 +122,35 @@ export class PostController {
       return res.status(500).json({ message: 'Error fetching post', error: error });
     }
   }
+
+  /**
+   * @swagger
+   * /posts/{id}:
+   *   delete:
+   *     summary: Exclui um post pelo ID
+   *     description: Exclui um post pelo ID.
+   *     tags:
+   *       - Posts
+   *     parameters:
+   *       - in: path
+   *         name: id
+   *         required: true
+   *         schema:
+   *           type: integer
+   *         description: ID do post
+   *     responses:
+   *       200:
+   *         description: Post excluído com sucesso.
+   *       500:
+   *         description: Erro ao excluir o post.
+   */
+  async deletePostById(req: Request, res: Response): Promise<Response> {
+    try {
+      await this.postService.deletePostById(Number(req.params.id));
+      return res.status(200).json({ message: 'Post deleted successfully' });
+    } catch (error) {
+      console.error('Error deleting post:', error);
+      return res.status(500).json({ message: 'Error deleting post', error: error });
+    }
+  }
 }
