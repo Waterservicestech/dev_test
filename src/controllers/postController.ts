@@ -23,7 +23,7 @@ export const createPost = async (req: Request, res: Response) => {
     const post = new Post();
     post.title = title;
     post.description = description;
-    post.user = user;
+    post.userId = userId;
 
     const postRepository = AppDataSource.getRepository(Post);
     await postRepository.save(post);
