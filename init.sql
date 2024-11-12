@@ -1,5 +1,16 @@
 USE test_db;
 
---TODO Crie a tabela de user;
+CREATE TABLE user (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    firstName VARCHAR(100) NOT NULL,
+    lastName VARCHAR(100) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE
+);
 
---TODO Crie a tabela de posts;
+CREATE TABLE post (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    userId INT NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    content VARCHAR(100) NOT NULL,
+    FOREIGN KEY (userId) REFERENCES user(id) ON DELETE CASCADE
+);
