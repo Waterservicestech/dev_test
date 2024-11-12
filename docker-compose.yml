@@ -1,10 +1,8 @@
-version: '3.8'
-
 services:
   api:
     build: .
     ports:
-      - "3000:3000"
+      - '3000:3000'
     environment:
       - DB_HOST=db
       - DB_USER=root
@@ -13,14 +11,13 @@ services:
     depends_on:
       - db
 
-
   db:
     image: mysql:8.0
     environment:
       - MYSQL_ROOT_PASSWORD=password
       - MYSQL_DATABASE=test_db
     ports:
-      - "3306:3306"
+      - '3306:3306'
     volumes:
       - mysql-data:/var/lib/mysql
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
