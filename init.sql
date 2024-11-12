@@ -1,6 +1,5 @@
 USE test_db;
 
---TODO Crie a tabela de user;
 create table user (
   id bigint unsigned not null auto_increment,
   firstName varchar(100) not null,
@@ -8,9 +7,6 @@ create table user (
   email varchar(100) not null,
   primary key (id)
 );
-
-
---TODO Crie a tabela de posts;
 
 create table post (
   id bigint unsigned not null auto_increment,

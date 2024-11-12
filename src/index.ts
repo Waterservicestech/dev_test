@@ -45,7 +45,7 @@ app.post('/users', async (req, res) => {
     insert.lastName = lastName;
     insert.email = email;
     const save = await repository.save(insert);
-    return res.status(201).json({"message": "User created successfully", "user": save});
+    return res.status(201).json(save);
   }catch(err){
     return res.status(500).json({ error: "Server error" });
   }
@@ -63,7 +63,7 @@ app.post('/posts', async (req, res) => {
     insert.description = description;
     insert.userId = userId;
     const save = await repository.save(insert);
-    return res.status(201).json({"message": "Post created successfully", "post": save});
+    return res.status(201).json(save);
   }catch(err){
     return res.status(500).json({ error: "Server error" });
   }

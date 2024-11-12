@@ -14,5 +14,6 @@ ENV DB_PASSWORD=senha
 ENV DB_NAME=db
 
 RUN npm i
+RUN npm run build
 
 CMD [ "npm", "start" ]

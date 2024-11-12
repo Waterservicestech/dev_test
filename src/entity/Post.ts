@@ -6,15 +6,15 @@ import { User } from "./User";
 export class Post {
     // define a chave primária como auto incremento
     @PrimaryGeneratedColumn()
-    id: number;
+    id!: number;
 
     @Column({ nullable: false, length: 100 })
-    title: string;
+    title!: string;
 
     @Column({ nullable: false, length: 100 })
-    description: string;
+    description!: string;
 
     @ManyToOne(() => User, (user) => user.post)
-    userId: User;
+    userId!: User;
 
 }

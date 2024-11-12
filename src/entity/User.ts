@@ -6,17 +6,17 @@ import { Post } from "./Post";
 export class User {
     // define a chave primária como auto incremento
     @PrimaryGeneratedColumn()
-    id: number;
+    id!: number;
 
     @Column({ nullable: false, length: 100 })
-    firstName: string;
+    firstName!: string;
 
     @Column({ nullable: false, length: 100 })
-    lastName: string;
+    lastName!: string;
 
     @Column({ nullable: false, length: 100 })
-    email: string;
+    email!: string;
 
     @OneToMany(() => Post, (post) => post.userId)
-    post: Post[];
+    post!: Post[];
 }
