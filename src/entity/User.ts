@@ -3,7 +3,7 @@ import { Post } from "./Post";
 
 //TODO Crie a entidade de User
 
-@Entity('User')
+@Entity()
 export class User {
   @PrimaryGeneratedColumn()
   id?: number;
