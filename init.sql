@@ -1,6 +1,6 @@
 USE test_db;
 
---TODO Crie a tabela de user;
+--TODO Crie a tabela de user
 CREATE TABLE user(
     id INT PRIMARY KEY AUTO_INCREMENT,
     firstName VARCHAR(100) NOT NULL,
@@ -8,7 +8,6 @@ CREATE TABLE user(
     email VARCHAR(100) NOT NULL
 );
 
---TODO Crie a tabela de posts;
 CREATE TABLE posts (
     id INT PRIMARY KEY AUTO_INCREMENT,
     title VARCHAR(100) NOT NULL,
