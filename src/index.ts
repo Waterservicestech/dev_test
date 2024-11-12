@@ -7,6 +7,7 @@ import { Post } from './entity/Post';
 const app = express();
 app.use(express.json());
 
+// TODO: is this configuration good?
 const AppDataSource = new DataSource({
   type: "mysql",
   host: process.env.DB_HOST || "localhost",
@@ -33,12 +34,67 @@ const initializeDatabase = async () => {
 
 initializeDatabase();
 
-app.post('/users', async (req, res) => {
+// PERGUNTAR PELO EMAIL SE É PRA FAZER APENAS ESSES POST ENDPOINTS!
+
 // Crie o endpoint de users
+app.post("/users", async (req, res) => {
+  try {
+    const { firstName, lastName, email } = req.body;
+
+    // TESTAR ISSO AQUI!
+    try {
+      (await AppDataSource.getRepository(User).findOneBy({ email })) ||
+        (res.status(400).json({ message: "Email already in use!" }) &&
+          Promise.reject());
+    } catch (error) {
+      console.error("Error during email verification:", error);
+      if (!res.headersSent) {
+        return res
+          .status(500)
+          .json({ message: "Error verifying email uniqueness" });
+      }
+      return;
+    }
+
+    const user = AppDataSource.getRepository(User).create({
+      firstName,
+      lastName,
+      email,
+    });
+
+    const savedUser = await AppDataSource.getRepository(User).save(user);
+    res.status(201).json(savedUser);
+  } catch (error) {
+    console.error("Error creating user:", error);
+    res.status(500).json({ message: "Failed to create user" });
+  }
 });
 
-app.post('/posts', async (req, res) => {
 // Crie o endpoint de posts
+app.post("/posts", async (req, res) => {
+  try {
+    const { title, description, userId } = req.body;
+
+    // Consolidar essa verificação:
+    const user = await AppDataSource.getRepository(User).findOneBy({
+      id: userId,
+    });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // consolidar essa porra toda:
+    const post = AppDataSource.getRepository(Post).create({
+      title,
+      description,
+      user,
+    });
+    const savedPost = await AppDataSource.getRepository(Post).save(post);
+    res.status(201).json(savedPost);
+  } catch (error) {
+    console.error("Error creating post:", error);
+    res.status(500).json({ message: "Failed to create post" });
+  }
 });
 
 const PORT = process.env.PORT || 3000;

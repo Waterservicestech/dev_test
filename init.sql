@@ -1,6 +1,6 @@
 USE test_db;
 
---TODO Crie a tabela de user;
+-- TODO Crie a tabela de user
 CREATE TABLE user (
     id INT AUTO_INCREMENT PRIMARY KEY,
     firstName VARCHAR(100) NOT NULL,
