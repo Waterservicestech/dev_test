@@ -21,7 +21,7 @@ async function testCreateUser() {
 
 const testPost = {
   title: "Some message",
-  description: "Some description",
+  content: "Some description",
   userId: null as number | null
 };
 
