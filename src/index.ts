@@ -34,11 +34,43 @@ const initializeDatabase = async () => {
 initializeDatabase();
 
 app.post('/users', async (req, res) => {
-// Crie o endpoint de users
+  const { firstName, lastName, email } = req.body;
+
+  if (!firstName || !lastName || !email) {
+    return res.status(400).json({ message: 'First name, last name, and email are required'})
+  }
+
+  try {
+    const userRepository = AppDataSource.getRepository(User);
+
+    const user = userRepository.create({ firstName, lastName, email });
+    const result = await userRepository.save(user);
+
+    res.status(201).json(result);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message:'Error creating user'});
+  }
 });
 
 app.post('/posts', async (req, res) => {
-// Crie o endpoint de posts
+  const { title, description, userId } = req.body;
+
+  if (!title || !description || !userId) {
+    return res.status(400).json({ message: 'Title, description and user ID are required' });
+  }
+
+  try {
+    const postRepository = AppDataSource.getRepository(Post);
+    const post = postRepository.create({ title, description, user: { id: userId }});
+
+    const result = await postRepository.save(post);
+
+    res.status(201).json(result);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error creating post' });
+  }
 });
 
 const PORT = process.env.PORT || 3000;
