@@ -57,3 +57,4 @@ Execute os seguintes comandos para testar a aplicação:
    ```
 
 ## 6º Passo: Crie um fork desse repositório e submita o código preenchido nele.
+Crie um Pull Request para a brach master nos enviando o código
