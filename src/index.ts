@@ -34,11 +34,60 @@ const initializeDatabase = async () => {
 initializeDatabase();
 
 app.post('/users', async (req, res) => {
-// Crie o endpoint de users
+  const {firstName, lastName, email} = req.body;
+
+  if(!firstName || !lastName || !email) {
+    return res.status(400).json({message: "Todos os campos são obrigatórios."})
+  }
+
+  const user = new User();
+  user.firstName = firstName;
+  user.lastName = lastName;
+  user.email = email;
+  
+  try {
+      const userRepository = AppDataSource.getRepository(User);
+      const savedUser = await userRepository.save(user);
+
+      return res.status(201).json(savedUser);
+  } catch(error) {
+    console.error("Erro ao salvar o usuário: ", error);
+    return res.status(500).json({ message: "Erro ao salvar o usuário." });
+  }
+
+
 });
 
 app.post('/posts', async (req, res) => {
-// Crie o endpoint de posts
+  const { title, description, userId } = req.body;
+
+  if(!title || !description || !userId) {
+    return res.status(400).json({ message: "Todos os campos são obrigatórios." })
+  }
+
+  const post = new Post();
+
+  post.title = title;
+  post.description = description;
+
+  const userRepository = AppDataSource.getRepository(User);
+  const user = await userRepository.findOne({ where: { id: userId } });
+
+  if (!user) {
+    return res.status(404).json({ message: "Usuário não encontrado." });
+  }
+  
+  post.user = user;
+
+  try {
+    const postRepository = AppDataSource.getRepository(Post);
+    const savedPost = await postRepository.save(post);
+
+    return res.status(201).json(savedPost);
+  } catch(error) {
+    console.error("Erro ao salvar o post:", error);
+    return res.status(500).json({ message: "Erro ao salvar o post." });
+  }
 });
 
 const PORT = process.env.PORT || 3000;
