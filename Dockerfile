@@ -1,4 +1,3 @@
-#TODO Configure o Dockerfile
 FROM node:18-alpine
 
 WORKDIR /app
@@ -13,4 +12,4 @@ RUN npm run build
 
 EXPOSE 3000
 
-CMD ["npm", "run", "start"]
+CMD ["npm", "start"]
