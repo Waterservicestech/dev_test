@@ -34,11 +34,39 @@ const initializeDatabase = async () => {
 initializeDatabase();
 
 app.post('/users', async (req, res) => {
-// Crie o endpoint de users
+  try{
+    const { firstName, lastName, email } = req.body;
+    const insert = new User();
+    const repository = await AppDataSource.getRepository(User);
+    if(firstName.length == 0 || lastName.length == 0 || email.length == 0){
+      return res.status(400).json({"error": "Missing required fields"})
+    }
+    insert.firstName = firstName;
+    insert.lastName = lastName;
+    insert.email = email;
+    const save = await repository.save(insert);
+    return res.status(201).json(save);
+  }catch(err){
+    return res.status(500).json({ error: "Server error" });
+  }
 });
 
 app.post('/posts', async (req, res) => {
-// Crie o endpoint de posts
+  try{
+    const { title, description, userId } = req.body;
+    const insert = new Post();
+    const repository = await AppDataSource.getRepository(Post);
+    if(title.length == 0 || description.length == 0 || userId.length == 0){
+      return res.status(400).json({"error": "Missing required fields"})
+    }
+    insert.title = title;
+    insert.description = description;
+    insert.userId = userId;
+    const save = await repository.save(insert);
+    return res.status(201).json(save);
+  }catch(err){
+    return res.status(500).json({ error: "Server error" });
+  }
 });
 
 const PORT = process.env.PORT || 3000;
