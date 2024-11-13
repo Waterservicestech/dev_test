@@ -7,7 +7,7 @@ import postRoutes from "./routes/postRoutes";
 const app = express();
 app.use(express.json());
 
-initializeDatabase(40000).then(() => {
+initializeDatabase(160000).then(() => {
   app.use("/users", userRoutes);
   app.use("/posts", postRoutes);
 
