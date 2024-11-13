@@ -17,5 +17,5 @@ export class User {
     email!: string;
 
     @OneToMany(() => Post, (post) => post.user)
-    posts: Post[] = [];
+    posts?: Post[]
 }

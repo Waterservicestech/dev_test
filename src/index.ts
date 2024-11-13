@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import express from 'express';
-import { DataSource } from 'typeorm';
+import { DataSource, getRepository } from 'typeorm';
 import { User } from './entity/User';
 import { Post } from './entity/Post';
 
@@ -21,7 +21,7 @@ const AppDataSource = new DataSource({
 const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 const initializeDatabase = async () => {
-  await wait(20000);
+  await wait(200);
   try {
     await AppDataSource.initialize();
     console.log("Data Source has been initialized!");
@@ -34,11 +34,55 @@ const initializeDatabase = async () => {
 initializeDatabase();
 
 app.post('/users', async (req, res) => {
-// Crie o endpoint de users
+    try {
+        const { firstName, lastName, email } = req.body;
+        if (!firstName || !lastName || !email) {
+            return res.status(400).json({
+                error: "Missing fields"
+            });
+        }
+
+        const user = AppDataSource.manager.create(User,{
+            firstName,
+            lastName,
+            email
+        });
+        await AppDataSource.manager.save(user);
+        return res.status(201).json(user);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({message: "Internal server error"});
+    }
 });
 
 app.post('/posts', async (req, res) => {
-// Crie o endpoint de posts
+    try {
+        const { title, description, userId } = req.body;
+        if (!title || !description || !userId) {
+            return res.status(400).json({
+                error: "Missing fields"
+            });
+        }
+
+        const user = AppDataSource.manager.findOne(User, {where: { id: userId }});
+        if (!user) {
+            return res.status(404).json({
+                error: "User not found"
+            });
+        }
+
+        const post = AppDataSource.manager.create(Post,{
+            title,
+            description,
+            userId
+        });
+
+        await AppDataSource.manager.save(post);
+        return res.status(201).json(post);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({message: "Internal server error"});
+    }
 });
 
 const PORT = process.env.PORT || 3000;
