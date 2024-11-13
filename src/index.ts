@@ -34,11 +34,37 @@ const initializeDatabase = async () => {
 initializeDatabase();
 
 app.post('/users', async (req, res) => {
-// Crie o endpoint de users
+  const {firstName,lastName, email} = req.body;
+  if(!firstName||!lastName||!email){
+    return res.status(400).json({message:"Missing required fields"})
+  }
+  const newUser = new User();
+  newUser.firstName = firstName;
+  newUser.lastName = lastName;
+  newUser.email = email;
+  try {
+    const addUser = await AppDataSource.manager.save(newUser);
+    return res.status(201).json(addUser);
+  } catch (error) {
+    return res.status(500).json({message:"An error occurred while creating the user. Please try again later."})
+  }
 });
 
 app.post('/posts', async (req, res) => {
-// Crie o endpoint de posts
+  const {title,description,userId}= req.body;
+  if(!title|| !description||!userId){
+    return res.status(400).json({message:"Missing required fields"})
+  }
+  const newPost = new Post();
+  newPost.title = title;
+  newPost.description = description;
+  newPost.user = userId;
+  try {
+    const addPost = await AppDataSource.manager.save(newPost);
+    return res.status(201).json(addPost)
+  } catch (error) {
+    return res.status(500).json({message:"An error occurred while creating the post. Please try again later."})
+  }
 });
 
 const PORT = process.env.PORT || 3000;
