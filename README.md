@@ -1,5 +1,11 @@
 # Descrição do Teste para a Vaga de Desenvolvedor Jr.
 
+### Desenvolvido por:
+   
+   David Marcos Santos Moura
+
+   E-mail: david.marcos54321@gmail.com
+
 ## Contextualização do Desafio
 
 Este teste foi desenvolvido para avaliar suas habilidades práticas em tarefas comuns do dia a dia de um desenvolvedor júnior. Através deste desafio, você terá a oportunidade de demonstrar seu conhecimento na criação de banco de dados, definição de relacionamentos entre tabelas e entidades, além de aplicar boas práticas de desenvolvimento em um ambiente Docker. O objetivo é simular uma situação real de desenvolvimento de uma aplicação simples, onde você deverá criar as estruturas necessárias e garantir que o sistema esteja funcionando corretamente por meio de testes. A conclusão bem-sucedida desta tarefa refletirá seu domínio de conceitos importantes para a vaga.
@@ -44,10 +50,12 @@ Configure o `Dockerfile` da aplicação para garantir que ela seja construída c
 
 Execute os seguintes comandos para testar a aplicação:
 
-1. **Subir a aplicação utilizando Docker Compose**:
+1. **Criar arquivo .env na raiz do projeto e adicionar as variaveis do .env.example no arquivo .env**
+
+2. **Subir a aplicação utilizando Docker Compose**:
    ```bash
    docker compose up --build
-   docker exec -it <Container Name> /bin/sh
+   docker exec -it <Container ID> /bin/sh
    
    ```
 
