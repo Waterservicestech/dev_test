@@ -33,12 +33,67 @@ const initializeDatabase = async () => {
 
 initializeDatabase();
 
+app.get('/users', async (req, res) => {
+  const result = await AppDataSource.getRepository(User).find();
+  return res.send(result);
+});
+
 app.post('/users', async (req, res) => {
-// Crie o endpoint de users
+  const {firstName, lastName, email} = req.body;
+  if ((firstName === undefined || !firstName) ||
+    (lastName === undefined || !lastName) ||
+    (email === undefined || !email))
+  {
+    return res.status(400).send({success: false, message: "Mensagem inválida!"});
+  }
+
+  try
+  {
+    const userRepository = AppDataSource.getRepository(User);
+    const user = userRepository.create({
+      firstName: firstName,
+      lastName: lastName,
+      email: email
+    });
+  
+    const result = await userRepository.save(user);
+    return res.send(result);
+  }
+  catch (ex)
+  {
+    console.log(ex);
+    return res.status(400).send({success: false, message: "Não foi possível inserir o usuário no banco de dados, tente novamente!"});
+  }
+  
 });
 
 app.post('/posts', async (req, res) => {
-// Crie o endpoint de posts
+  if ((req.body.title === undefined || !req.body.title) ||
+  (req.body.description === undefined || !req.body.description) ||
+  (req.body.userId === undefined || req.body.userId < 0))
+  {
+    return res.status(400).send({success: false, message: "Mensagem inválida!"});
+  }
+
+  try
+  {
+    const userRepository = AppDataSource.getRepository(User);
+    if(!(await userRepository.existsBy({id: req.body.userId})))
+    {
+      return res.status(400).send({message: "Usuário não encontrado"});
+    }
+
+    const postRepository = AppDataSource.getRepository(Post);
+    const post = postRepository.create(req.body);
+  
+    const result = await postRepository.save(post);
+    return res.send(result);
+  }
+  catch (ex)
+  {
+    console.log(ex);
+    return res.status(400).send({message: "Não foi possível inserir o post no banco de dados, tente novamente!"});
+  }
 });
 
 const PORT = process.env.PORT || 3000;
