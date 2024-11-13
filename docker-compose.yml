@@ -6,10 +6,10 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - DB_HOST=db
-      - DB_USER=root
-      - DB_PASSWORD=password
-      - DB_NAME=test_db
+      - DB_HOST= db
+      - DB_USER= root
+      - DB_PASSWORD= 54544761Chpj
+      - DB_NAME= test_db
     depends_on:
       - db
 
@@ -17,13 +17,12 @@ services:
   db:
     image: mysql:8.0
     environment:
-      - MYSQL_ROOT_PASSWORD=password
-      - MYSQL_DATABASE=test_db
+      - MYSQL_ROOT_PASSWORD= 54544761Chpj
+      - MYSQL_DATABASE= test_db
     ports:
       - "3306:3306"
     volumes:
       - mysql-data:/var/lib/mysql
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-
 volumes:
   mysql-data:
