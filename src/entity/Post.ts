@@ -8,7 +8,6 @@ export default class Post {
 
     @Column({type: 'varchar', length: 100, nullable: false})
     title!: string
-
     @Column({type: 'varchar', length: 100, nullable: false})
     description!: string
 
