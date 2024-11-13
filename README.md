@@ -46,8 +46,8 @@ Execute os seguintes comandos para testar a aplicação:
 
 1. **Subir a aplicação utilizando Docker Compose**:
    ```bash
-   docker compose up --build
-   docker exec -it <Container Name> /bin/sh
+   docker compose up --build -d
+   docker exec -it dev_test_api /bin/sh
    
    ```
 
