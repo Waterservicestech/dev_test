@@ -1,5 +1,5 @@
 # Usar uma imagem base do Node.js
-FROM node:18
+FROM node:18 AS build
 
 WORKDIR /app
 COPY package*.json ./
