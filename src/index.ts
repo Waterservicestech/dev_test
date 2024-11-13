@@ -1,11 +1,8 @@
 import 'reflect-metadata';
 import express from 'express';
 import { DataSource } from 'typeorm';
-import { container } from './container';
-import { UserUseCase } from '@user/UserUseCase';
 import { User } from '@entity/User';
 import { Post } from '@entity/Post';
-import { PostUseCase } from '@post/PostUseCase';
 
 const app = express();
 app.use(express.json());
@@ -17,15 +14,13 @@ export const AppDataSource = new DataSource({
   username: process.env.DB_USER || "root",
   password: process.env.DB_PASSWORD || "password",
   database: process.env.DB_NAME || "test_db",
-  entities: [User,Post],
+  entities: [User, Post],
   synchronize: false,
   logging: process.env.NODE_ENV === 'development' ? true : false,
 });
 
-const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 const initializeDatabase = async () => {
-  await wait(20000);
   try {
     await AppDataSource.initialize();
     console.log("Data Source has been initialized!");
@@ -38,11 +33,11 @@ const initializeDatabase = async () => {
 initializeDatabase();
 
 app.post('/users', async (req, res) => {
-  const {email, firstName, lastName} = req.body;
-
-  const useCase = container.get(UserUseCase);
-
-  const response = await useCase.create({email, firstName, lastName});
+  const {firstName, lastName, email} = req.body;
+    
+  const user = new User(firstName, lastName, email);
+  
+  const response = await AppDataSource.getRepository(User).save(user)
 
   return res.status(201).json(response);
 
@@ -51,11 +46,11 @@ app.post('/users', async (req, res) => {
 app.post('/posts', async (req, res) => {
   const { title , description, userId } = req.body;
 
-  const useCase = container.get(PostUseCase);
+  const post = new Post(title, description, userId);
 
-  const response = await useCase.create({title, description, userId});
+  const response = await AppDataSource.getRepository(Post).save(post)
 
-  return res.sendStatus(201).json(response);
+  return res.status(201).json(response);
 });
 
 const PORT = process.env.PORT || 3000;

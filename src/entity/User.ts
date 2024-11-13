@@ -15,9 +15,6 @@ export class User {
   @Column()
   email: string;
 
-  @CreateDateColumn()
-  createdAt: Date;
-
   @OneToMany(() => Post, (post) => post.user)
   posts?: Post[]; 
 
@@ -25,8 +22,5 @@ export class User {
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
-    this.createdAt = new Date();
-    this.id = 1
-
   }
 }
