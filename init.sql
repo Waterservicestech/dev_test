@@ -1,7 +1,5 @@
 USE test_db;
 
---TODO Crie a tabela de user;
-
 DROP TABLE IF EXISTS user;
 
 CREATE TABLE user (
@@ -10,8 +8,6 @@ CREATE TABLE user (
     lastName varchar(100) NOT NULL, 
     email varchar(100) NOT NULL
 )
-
---TODO Crie a tabela de posts;
 
 DROP TABLE IF EXISTS post;
 
