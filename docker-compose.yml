@@ -21,6 +21,7 @@ services:
       - MYSQL_DATABASE=test_db
     ports:
       - "3306:3306"
+      # no meu pc tava dando erro na porta 3306, eu mudei para 3307:3306 no teste
     volumes:
       - mysql-data:/var/lib/mysql
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
