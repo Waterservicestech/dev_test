@@ -34,11 +34,43 @@ const initializeDatabase = async () => {
 initializeDatabase();
 
 app.post('/users', async (req, res) => {
-// Crie o endpoint de users
+  try {
+    const user = new User()
+     user.firstName = req.body.firstName
+     user.lastName = req.body.lastName
+     user.email = req.body.email
+
+    if (!user.firstName || !user.lastName || !user.email) {
+      return res.status(400).json({ message: "Algum dos valores está incorreto ou não está preenchido." });
+    }
+    
+    const userData = await AppDataSource.manager.save(user)
+
+    return res.status(201).json({message: `Usuário criado com sucesso!`, id: userData.id, firstName: userData.firstName, lastName: userData.lastName, email: userData.email})
+  } catch (error) {
+    console.error("Error:", error)
+    return res.status(500).json({ message: "Erro interno do servidor." });
+  }
 });
 
 app.post('/posts', async (req, res) => {
-// Crie o endpoint de posts
+ try {
+  const post = new Post();
+  post.title = req.body.title
+  post.description = req.body.description
+  post.user = req.body.userId
+  
+  if (!post.title || !post.description || !post.user) {
+    return res.status(400).json({ message: "Algum dos valores está incorreto ou não está preenchido." });
+  }
+  
+  const postData = await AppDataSource.manager.save(post)
+
+  return res.status(201).json({message: `Post criado com sucesso!`, id: postData.id, title: postData.title, description: postData.description, userId: postData.user})
+ } catch (error) {
+  console.error("Error:", error)
+  return res.status(500).json({ message: "Erro interno do servidor." });
+ }
 });
 
 const PORT = process.env.PORT || 3000;
