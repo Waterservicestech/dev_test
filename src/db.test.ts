@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+// o email é uma entidade única, favor não repetir
 const testUser = {
   firstName: "John",
   lastName: "Doe",
@@ -11,7 +12,7 @@ let userId: number | null = null;
 
 async function testCreateUser() {
   try {
-    const response = await axios.post('http://localhost:3000/users', testUser);
+    const response = await axios.post('http://localhost:3000/api/users', testUser);
     userId = response.data.id;
     console.log('User created successfully:', response.data);
   } catch (error) {
@@ -19,6 +20,7 @@ async function testCreateUser() {
   }
 }
 
+// insira o userdId para ter um bom retorno
 const testPost = {
   title: "Some message",
   description: "Some description",
@@ -30,7 +32,7 @@ async function testCreatePost() {
   testPost.userId = userId;
 
   try {
-    const response = await axios.post('http://localhost:3000/posts', testPost);
+    const response = await axios.post('http://localhost:3000/api/posts', testPost);
     console.log('Post created successfully:', response.data);
   } catch (error) {
     console.error('Error creating post:', error);
