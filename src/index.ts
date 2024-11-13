@@ -35,10 +35,44 @@ initializeDatabase();
 
 app.post('/users', async (req, res) => {
 // Crie o endpoint de users
+  try {
+    const { firstName, lastName, email} = req.body;
+
+    const userRepo = AppDataSource.getRepository(User);
+    const user = userRepo.create({firstName,lastName,email});
+
+    await userRepo.save(user);
+
+    res.status(201).json(user);
+
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({message: 'Error during user creation'});
+  }
 });
 
 app.post('/posts', async (req, res) => {
 // Crie o endpoint de posts
+
+  try {
+    const { title, description, userId } = req.body;
+    
+    const userRepo = AppDataSource.getRepository(User);
+    const user = await userRepo.findOneBy({ id: userId });  
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const postRepo = AppDataSource.getRepository(Post);
+    const post = postRepo.create({ title, description, user });
+    await postRepo.save(post);
+
+    res.status(201).json(post);
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Error during post creation' });
+  }
 });
 
 const PORT = process.env.PORT || 3000;
