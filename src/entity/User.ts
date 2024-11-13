@@ -1,5 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany } from "typeorm";
+import { Post } from "./Post";
 
+@Entity({name: 'user'})
 export class User {
   @PrimaryGeneratedColumn()
   id!: number;
@@ -13,13 +15,12 @@ export class User {
   @Column()
   email: string;
 
-  @CreateDateColumn()
-  createdAt: Date;
+  @OneToMany(() => Post, (post) => post.user)
+  posts?: Post[]; 
 
-  constructor(firstName: string, lastName: string, email: string){
+  constructor(firstName: string, lastName: string, email: string) {
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
-    this.createdAt = new Date();
   }
 }
