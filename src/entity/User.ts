@@ -1,16 +1,21 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, Unique } from "typeorm";
 import Post from "./Post";
 
 @Entity()
+@Unique(["email"])
 export default class User {
     @PrimaryGeneratedColumn()
     id!:number
+
     @Column({type: 'varchar', length: 100, nullable: false})
-    public firstName!: string
+    firstName!: string
+
     @Column({type: 'varchar', length: 100, nullable: false})
-    public lastName!: string
+    lastName!: string
+
     @OneToMany(() => Post, (post) => post.user)
     posts?: Post[]
+
     @Column({type: 'varchar', length: 100, nullable: false})
-    public email!: string
+    email!: string
 }
