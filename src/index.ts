@@ -8,15 +8,9 @@ app.use(express.json());
 
 app.use(router)
 
-initializeDatabase().then(() => {
-  
-  const PORT = process.env.PORT || 3000;
-  app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-  });
+initializeDatabase()
 
-}).catch((err) => {
-  console.error(err);
-  process.exit(1);
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
-
