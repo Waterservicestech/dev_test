@@ -15,11 +15,14 @@ const AppDataSource = new DataSource({
   username: process.env.DB_USER || "root",
   password: process.env.DB_PASSWORD || "password",
   database: process.env.DB_NAME || "test_db",
-  entities: [User,Post],
+  entities: [User, Post],
   synchronize: true,
+
+  // Adicionei o seguinte para consistencia durante testes, pois com a verificação do email de usuário o teste falha quando roda uma segunda vez, e prefiro ter um endpoint mais robusto!
+  dropSchema: true,
 });
 
-const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const initializeDatabase = async () => {
   await wait(20000);
@@ -34,26 +37,23 @@ const initializeDatabase = async () => {
 
 initializeDatabase();
 
-// PERGUNTAR PELO EMAIL SE É PRA FAZER APENAS ESSES POST ENDPOINTS!
-
 // Crie o endpoint de users
 app.post("/users", async (req, res) => {
   try {
     const { firstName, lastName, email } = req.body;
 
-    // TESTAR ISSO AQUI!
     try {
-      (await AppDataSource.getRepository(User).findOneBy({ email })) ||
-        (res.status(400).json({ message: "Email already in use!" }) &&
-          Promise.reject());
+      const existingUser = await AppDataSource.getRepository(User).findOneBy({
+        email,
+      });
+      if (existingUser) {
+        return res.status(400).json({ message: "Email already in use!" });
+      }
     } catch (error) {
       console.error("Error during email verification:", error);
-      if (!res.headersSent) {
-        return res
-          .status(500)
-          .json({ message: "Error verifying email uniqueness" });
-      }
-      return;
+      return res
+        .status(500)
+        .json({ message: "Error verifying email uniqueness" });
     }
 
     const user = AppDataSource.getRepository(User).create({
@@ -72,10 +72,9 @@ app.post("/users", async (req, res) => {
 
 // Crie o endpoint de posts
 app.post("/posts", async (req, res) => {
-  try {
-    const { title, description, userId } = req.body;
+  const { title, description, userId } = req.body;
 
-    // Consolidar essa verificação:
+  try {
     const user = await AppDataSource.getRepository(User).findOneBy({
       id: userId,
     });
@@ -83,7 +82,6 @@ app.post("/posts", async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // consolidar essa porra toda:
     const post = AppDataSource.getRepository(Post).create({
       title,
       description,
