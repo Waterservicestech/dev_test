@@ -1,10 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 
-
 // Entidade que representa um usuário.
 @Entity()
 export class User {
-
   // ID do usuário.
   @PrimaryGeneratedColumn()
   id!: number;

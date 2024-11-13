@@ -1,5 +1,5 @@
-import { AppDataSource } from '../index';
-import { Post } from '../entity/Post';
+import { AppDataSource } from "../index";
+import { Post } from "../entity/Post";
 
 /**
  * Retorna o repositório de posts.

@@ -1,10 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 
-
-  // Entidade que representa um post.
+// Entidade que representa um post.
 @Entity()
 export class Post {
-
   // ID do post.
   @PrimaryGeneratedColumn()
   id!: number;
@@ -12,12 +10,12 @@ export class Post {
   // Título do post.
   @Column({ length: 100 })
   title: string;
- 
+
   // Descrição do post.
   @Column({ length: 100 })
   description: string;
 
-  // ID do usuário que criou o post. 
+  // ID do usuário que criou o post.
   @Column()
   userId: number;
 

@@ -1,6 +1,6 @@
-import { userRepository } from '../repository/user.repository';
-import { UserRequestDTO } from '../controller/dto/user-request.dto';
-import { UserResponseDTO } from '../controller/dto/user-response.dto';
+import { userRepository } from "../repository/user.repository";
+import { UserRequestDTO } from "../controller/dto/user-request.dto";
+import { UserResponseDTO } from "../controller/dto/user-response.dto";
 
 export class UserService {
   /**
@@ -8,9 +8,11 @@ export class UserService {
    * Verifica se o email já está em uso antes de criar o usuário.
    */
   async createUser(data: UserRequestDTO): Promise<UserResponseDTO> {
-    const existingUser = await userRepository().findOneBy({ email: data.email });
+    const existingUser = await userRepository().findOneBy({
+      email: data.email,
+    });
     if (existingUser) {
-      throw new Error('Email já está em uso');
+      throw new Error("Email já está em uso");
     }
 
     const user = userRepository().create(data);
@@ -27,16 +29,16 @@ export class UserService {
   async getUserById(id: number): Promise<UserResponseDTO> {
     const user = await userRepository().findOneBy({ id });
     if (!user) {
-      throw new Error('Usuário não encontrado');
+      throw new Error("Usuário não encontrado");
     }
     return user;
   }
 
   // Deleta um usuário por ID.
   async deleteUserById(id: number): Promise<void> {
-    const user =await userRepository().findOneBy({id});
+    const user = await userRepository().findOneBy({ id });
     if (!user) {
-      throw new Error('Usuário nao encontrado');
+      throw new Error("Usuário nao encontrado");
     }
 
     await userRepository().remove(user);

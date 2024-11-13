@@ -8,15 +8,11 @@ import { Post } from "./entity/Post";
 import { UserController } from "./controller/user.controller";
 import { PostController } from "./controller/post.controller";
 
-
 // Cria uma instância do Express e configura o middleware para lidar com requisições JSON.
-
-const app = express();
+export const app = express();
 app.use(express.json());
 
-
 // Configura a conexão com o banco de dados usando TypeORM.
-
 export const AppDataSource = new DataSource({
   type: "mysql",
   host: process.env.DB_HOST || "localhost",
@@ -62,15 +58,13 @@ const options = {
   apis: ["./src/**/*.ts"],
 };
 
- // Gera a documentação da API com Swagger.
+// Gera a documentação da API com Swagger.
 const swaggerSpec = swaggerJsdoc(options);
 
 // Configura o endpoint para servir a documentação da API com Swagger.
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-
 // Cria instâncias dos controladores para lidar com requisições de usuários e posts.
-
 const userController = new UserController();
 const postController = new PostController();
 
@@ -80,7 +74,6 @@ app.get("/users", userController.getUsers.bind(userController));
 app.get("/users/:id", userController.getUserById.bind(userController));
 app.delete("/users/:id", userController.deleteUserById.bind(userController));
 
-
 // Configura os endpoints para lidar com requisições de posts.
 app.post("/posts", postController.createPost.bind(postController));
 app.get("/posts", postController.getPosts.bind(postController));
@@ -89,7 +82,6 @@ app.delete("/posts/:id", postController.deletePostById.bind(postController));
 
 // Configura a porta para ouvir requisições.
 const PORT = process.env.PORT || 3000;
-
 
 // Inicia o servidor e ouve requisições na porta configurada.
 app.listen(PORT, () => {

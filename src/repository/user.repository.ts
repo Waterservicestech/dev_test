@@ -1,5 +1,5 @@
-import { AppDataSource } from '../index';
-import { User } from '../entity/User';
+import { AppDataSource } from "../index";
+import { User } from "../entity/User";
 
 /**
  * Retorna o repositório de usuários.
