@@ -1,13 +1,16 @@
 import 'reflect-metadata';
 import express from 'express';
 import { DataSource } from 'typeorm';
-import { User } from './entity/User';
-import { Post } from './entity/Post';
+import { container } from './container';
+import { UserUseCase } from '@user/UserUseCase';
+import { User } from '@entity/User';
+import { Post } from '@entity/Post';
+import { PostUseCase } from '@post/PostUseCase';
 
 const app = express();
 app.use(express.json());
 
-const AppDataSource = new DataSource({
+export const AppDataSource = new DataSource({
   type: "mysql",
   host: process.env.DB_HOST || "localhost",
   port: 3306,
@@ -15,7 +18,8 @@ const AppDataSource = new DataSource({
   password: process.env.DB_PASSWORD || "password",
   database: process.env.DB_NAME || "test_db",
   entities: [User,Post],
-  synchronize: true,
+  synchronize: false,
+  logging: process.env.NODE_ENV === 'development' ? true : false,
 });
 
 const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
@@ -34,11 +38,24 @@ const initializeDatabase = async () => {
 initializeDatabase();
 
 app.post('/users', async (req, res) => {
-// Crie o endpoint de users
+  const {email, firstName, lastName} = req.body;
+
+  const useCase = container.get(UserUseCase);
+
+  const response = await useCase.create({email, firstName, lastName});
+
+  return res.status(201).json(response);
+
 });
 
 app.post('/posts', async (req, res) => {
-// Crie o endpoint de posts
+  const { title , description, userId } = req.body;
+
+  const useCase = container.get(PostUseCase);
+
+  const response = await useCase.create({title, description, userId});
+
+  return res.sendStatus(201).json(response);
 });
 
 const PORT = process.env.PORT || 3000;
