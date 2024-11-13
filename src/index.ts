@@ -52,11 +52,7 @@ app.post('/users', async (req, res) => {
   {
     //Insere Usuário no banco de dados
     const userRepository = AppDataSource.getRepository(User);
-    const user = userRepository.create({
-      firstName: firstName,
-      lastName: lastName,
-      email: email
-    });
+    const user = userRepository.create({firstName, lastName, email});
     const result = await userRepository.save(user);
 
     //Retorna resultado da inserção com código 200
@@ -73,9 +69,10 @@ app.post('/users', async (req, res) => {
 
 app.post('/posts', async (req, res) => {
   //Valida se a requisição possui todos os campos [title,description,userId] definidos corretamente
-  if ((req.body.title === undefined || !req.body.title) ||
-    (req.body.description === undefined || !req.body.description) ||
-    (req.body.userId === undefined || req.body.userId < 0))
+  const {title, description, userId} = req.body;
+  if ((title === undefined || !title) ||
+    (description === undefined || !description) ||
+    (userId === undefined || userId < 0))
   {
     return res.status(400).send({success: false, message: "Mensagem inválida!"});
   }
@@ -91,7 +88,7 @@ app.post('/posts', async (req, res) => {
 
     //Insere Post no banco de dados
     const postRepository = AppDataSource.getRepository(Post);
-    const post = postRepository.create(req.body);
+    const post = postRepository.create({title, description, userId});
     const result = await postRepository.save(post);
 
     //Retorna resultado da inserção com código 200
