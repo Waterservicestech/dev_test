@@ -39,6 +39,7 @@ const initializeDatabase = async () => {
 
 initializeDatabase();
 
+// Crie o endpoint de users
 const userRepository = new UserRepository(AppDataSource.getRepository("User")); 
 const createUserUseCase = new CreateUserUseCase(userRepository);
 const userController = new UserController(createUserUseCase);
@@ -47,8 +48,9 @@ app.post('/users', async (req, res) => {
   return userController.addUser(req, res);
 });
 
+// Crie o endpoint de posts
 const postRepository = new PostRepository(AppDataSource.getRepository("Post"));
-const createPostUseCase = new CreatePostUseCase(postRepository);
+const createPostUseCase = new CreatePostUseCase(postRepository, userRepository);
 const postController = new PostController(createPostUseCase);
 
 app.post('/posts', async (req, res) => {

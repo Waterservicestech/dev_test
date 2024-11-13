@@ -14,17 +14,11 @@ export class Post {
     description: string;
 
     @ManyToOne(() => User, (user) => user.posts)
-    userId: User
+    userId: User;
 
     constructor(title: string, description: string, userId: User) {
         this.title = title;
         this.description = description;
-        this.userId = userId
+        this.userId = userId;
     }
 }
-/*
-id – Tipo: Int, autoincremental, chave primária (PK).
-title – Tipo: Varchar(100), não nulo.
-description – Tipo: Varchar(100), não nulo.
-userId – Tipo: Int, não nulo (chave estrangeira referenciando a tabela user)
-*/

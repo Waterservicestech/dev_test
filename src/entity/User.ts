@@ -17,7 +17,7 @@ export class User {
     email: string;
 
     @OneToMany(() => Post, (post) => post.userId)
-    posts?: Post[]
+    posts?: Post[];
 
     constructor(firstName: string, lastName: string, email: string) {
         this.firstName = firstName;
@@ -25,9 +25,3 @@ export class User {
         this.email = email;
     }
 }
-/*
-id – Tipo: Int, autoincremental, chave primária (PK).
-firstName – Tipo: Varchar(100), não nulo.
-lastName – Tipo: Varchar(100), não nulo.
-email – Tipo: Varchar(100), não nulo.
-*/

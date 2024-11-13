@@ -1,8 +1,8 @@
 #TODO Configure o Dockerfile
-#node:latest
 FROM node:18-alpine
 
 WORKDIR /api
+COPY ./init.sql ./docker-entrypoint-initdb.d/
 COPY . .
 
 RUN npm install --quiet --no-optional --no-fund --loglevel=error
