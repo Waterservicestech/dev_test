@@ -14,7 +14,7 @@ const AppDataSource = new DataSource({
   username: process.env.DB_USER || "root",
   password: process.env.DB_PASSWORD || "password",
   database: process.env.DB_NAME || "test_db",
-  entities: [User,Post],
+  entities: [User, Post],
   synchronize: true,
 });
 
@@ -34,11 +34,59 @@ const initializeDatabase = async () => {
 initializeDatabase();
 
 app.post('/users', async (req, res) => {
-// Crie o endpoint de users
+  // Crie o endpoint de users
+  try {
+    const { firstName, lastName, email } = req.body;
+
+    const userRepository = AppDataSource.getRepository(User);
+
+    const emailExisting = await userRepository.findOne({ where: { email } });
+    if (emailExisting) {
+      return res.status(400).json({ message: "Usuário já cadastrado!" })
+    }
+
+    const newUser = userRepository.create({
+      firstName,
+      lastName,
+      email,
+    })
+
+    await userRepository.save(newUser);
+
+    res.status(201).json(newUser);
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Erro interno no servidor." })
+  }
 });
 
 app.post('/posts', async (req, res) => {
-// Crie o endpoint de posts
+  // Crie o endpoint de posts
+  try {
+    const { title, description, userId } = req.body;
+
+    const userRepository = AppDataSource.getRepository(User);
+    const postRepository = AppDataSource.getRepository(Post);
+
+    const user = await userRepository.findOne({ where: { id: userId } });
+    if (!user) {
+      return res.status(404).json({ message: 'Usuário não encontrado!' });
+    }
+
+    const newPost = postRepository.create({
+      title,
+      description,
+      user
+    });
+
+    await postRepository.save(newPost);
+
+    res.status(201).json(newPost);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Erro interno no servidor." });
+  }
 });
 
 const PORT = process.env.PORT || 3000;
