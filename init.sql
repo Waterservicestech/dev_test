@@ -1,16 +1,16 @@
 USE test_db;
 
-CREATE TABLE user (
-    id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
+CREATE TABLE user(
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     firstName VARCHAR(100) NOT NULL,
     lastName VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL
-);
+)
 
-CREATE TABLE post (
-    id CHAR(36) PRIMARY KEY DEFAULT (UUID()),
+CREATE TABLE post(
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(100) NOT NULL,
     description VARCHAR(100) NOT NULL,
-    userId CHAR(36) NOT NULL,
-    FOREIGN KEY (userId) REFERENCES user(id)
-);
+    userId INT NOT NULL
+    add foreign key (userId) references user(id)
+)
