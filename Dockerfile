@@ -1,5 +1,3 @@
-
-
 FROM node:lts-alpine AS builder
 
 WORKDIR /usr/src/app
