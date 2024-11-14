@@ -33,12 +33,36 @@ const initializeDatabase = async () => {
 
 initializeDatabase();
 
+// Endpoint para criação de usuários
 app.post('/users', async (req, res) => {
-// Crie o endpoint de users
+  const { firstName, lastName, email } = req.body;
+  try {
+    const user = new User();
+    user.firstName = firstName;
+    user.lastName = lastName;
+    user.email = email;
+    await AppDataSource.manager.save(user);
+    res.status(201).json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error creating user" });
+  }
 });
 
+// Endpoint para criação de posts
 app.post('/posts', async (req, res) => {
-// Crie o endpoint de posts
+  const { title, description, userId } = req.body;
+  try {
+    const post = new Post();
+    post.title = title;
+    post.description = description;
+    post.user = await AppDataSource.manager.findOneOrFail(User, { where: { id: userId } });
+    await AppDataSource.manager.save(post);
+    res.status(201).json(post);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error creating post" });
+  }
 });
 
 const PORT = process.env.PORT || 3000;
