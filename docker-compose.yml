@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   api:
     build: .
@@ -12,7 +10,6 @@ services:
       - DB_NAME=test_db
     depends_on:
       - db
-
 
   db:
     image: mysql:8.0
