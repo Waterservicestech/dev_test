@@ -13,10 +13,7 @@ export const AppDataSource = new DataSource({
     synchronize: true,
 });
 
-const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-
 export const initializeDatabase = async () => {
-    await wait(20000);
     try {
         await AppDataSource.initialize();
         console.log("Data Source has been initialized!");
