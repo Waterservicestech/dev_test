@@ -11,7 +11,7 @@ let userId: number | null = null;
 
 async function testCreateUser() {
   try {
-    const response = await axios.post('http://localhost:3000/users', testUser);
+    const response: any = await axios.post('http://localhost:3000/users', testUser);
     userId = response.data.id;
     console.log('User created successfully:', response.data);
   } catch (error) {

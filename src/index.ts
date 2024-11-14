@@ -3,6 +3,12 @@ import express from 'express';
 import { DataSource } from 'typeorm';
 import { User } from './entity/User';
 import { Post } from './entity/Post';
+import { UserRepository } from './repository/user.repository';
+import { PostRepository } from './repository/post.repository';
+import { CreateUserUseCase } from './use-cases/create-user/create-user.use-case';
+import { CreatePostUseCase } from './use-cases/create-post/create-post.use-case';
+import { UserController } from './use-cases/create-user/create-user.controller';
+import { PostController } from './use-cases/create-post/create-post.controller';
 
 const app = express();
 app.use(express.json());
@@ -33,12 +39,22 @@ const initializeDatabase = async () => {
 
 initializeDatabase();
 
-app.post('/users', async (req, res) => {
 // Crie o endpoint de users
+const userRepository = new UserRepository(AppDataSource.getRepository("User")); 
+const createUserUseCase = new CreateUserUseCase(userRepository);
+const userController = new UserController(createUserUseCase);
+
+app.post('/users', async (req, res) => {
+  return userController.addUser(req, res);
 });
 
-app.post('/posts', async (req, res) => {
 // Crie o endpoint de posts
+const postRepository = new PostRepository(AppDataSource.getRepository("Post"));
+const createPostUseCase = new CreatePostUseCase(postRepository, userRepository);
+const postController = new PostController(createPostUseCase);
+
+app.post('/posts', async (req, res) => {
+  return postController.addPost(req, res);
 });
 
 const PORT = process.env.PORT || 3000;
