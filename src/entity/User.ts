@@ -5,17 +5,17 @@ import { Post } from './Post';
 @Entity()
 export class User {
     @PrimaryGeneratedColumn()
-    id: number;
+    id!: number;
 
     @Column({ type: 'varchar', length: 100 })
-    firstName: string;
+    firstName!: string;
 
     @Column({ type: 'varchar', length: 100 })
-    lastName: string;
+    lastName!: string;
 
     @Column({ type: 'varchar', length: 100, unique: true })
-    email: string;
+    email!: string;
 
     @OneToMany(() => Post, (post) => post.user)
-    posts: Post[];
+    posts!: Post[];
 }
