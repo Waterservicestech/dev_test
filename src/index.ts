@@ -34,11 +34,48 @@ const initializeDatabase = async () => {
 initializeDatabase();
 
 app.post('/users', async (req, res) => {
-// Crie o endpoint de users
+  const { firstName, lastName, email } = req.body;
+  if (!firstName || !lastName || !email) {
+    return res.status(400).json({ message: "Todos os campos são obrigatórios" });
+  }
+
+  try {
+    const user = new User();
+    user.firstName = firstName;
+    user.lastName = lastName;
+    user.email = email;
+
+    const savedUser = await AppDataSource.manager.save(user);
+    res.status(201).json(savedUser);
+  } catch (error) {
+    console.error("Erro ao criar usuário:", error);
+    res.status(500).json({ message: "Erro interno do servidor" });
+  }
 });
 
 app.post('/posts', async (req, res) => {
-// Crie o endpoint de posts
+  const { title, description, userId } = req.body;
+  if (!title || !description || !userId) {
+    return res.status(400).json({ message: "Todos os campos são obrigatórios" });
+  }
+
+  try {
+    const user = await AppDataSource.manager.findOne(User, { where: { id: userId } });
+    if (!user) {
+      return res.status(404).json({ message: "Usuário não encontrado" });
+    }
+
+    const post = new Post();
+    post.title = title;
+    post.description = description;
+    post.user = user;
+
+    const savedPost = await AppDataSource.manager.save(post);
+    res.status(201).json(savedPost);
+  } catch (error) {
+    console.error("Erro ao criar post:", error);
+    res.status(500).json({ message: "Erro interno do servidor" });
+  }
 });
 
 const PORT = process.env.PORT || 3000;
