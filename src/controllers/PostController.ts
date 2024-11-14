@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { AppDataSource } from "../db/conn";
+import { createPostSchema } from "../schema/post.schema";
 import { Post } from "../entity/Post";
 import { User } from "../entity/User";
 
@@ -7,7 +8,13 @@ export class PostController {
     static async create(req: Request, res: Response): Promise<Response> {
         const postRepository = AppDataSource.getRepository(Post);
         const userRepository = AppDataSource.getRepository(User);
-        const { title, description, userId } = req.body;
+
+        const result = createPostSchema.safeParse(req);
+        if (!result.success) {
+            return res.status(400).json({ message: "Validation error", errors: result.error.errors });
+        }
+
+        const { title, description, userId } = result.data.body;
 
         try {
             const user = await userRepository.findOneBy({ id: userId });
