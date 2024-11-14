@@ -14,7 +14,7 @@ const AppDataSource = new DataSource({
   username: process.env.DB_USER || "root",
   password: process.env.DB_PASSWORD || "password",
   database: process.env.DB_NAME || "test_db",
-  entities: [User,Post],
+  entities: [User, Post],
   synchronize: true,
 });
 
@@ -34,11 +34,44 @@ const initializeDatabase = async () => {
 initializeDatabase();
 
 app.post('/users', async (req, res) => {
-// Crie o endpoint de users
+  // Crie o endpoint de users
+  try {
+    const { firstName, lastName, email } = req.body;
+
+    const newUser = {
+      firstName,
+      lastName,
+      email,
+    }
+
+    const userRepository = AppDataSource.getRepository(User);
+    const user = userRepository.create(newUser);
+    await userRepository.save(user);
+
+    res.status(201).json(user);
+  } catch (error) {
+    res.status(500).json({ message: error });
+  }
 });
 
 app.post('/posts', async (req, res) => {
-// Crie o endpoint de posts
+  // Crie o endpoint de posts
+  try {
+    const { title, description, userId } = req.body
+
+    const newPost = {
+      title,
+      description,
+      userId,
+    }
+    const postRepository = AppDataSource.getRepository(Post);
+    const post = postRepository.create(newPost);
+    await postRepository.save(post);
+
+    res.status(201).json(post);
+  } catch (error) {
+    res.status(500).json({ message: error });
+  }
 });
 
 const PORT = process.env.PORT || 3000;
