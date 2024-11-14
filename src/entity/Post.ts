@@ -12,7 +12,7 @@ export class Post {
     @Column({ type: "varchar", length: 100 })
     description!: string;
 
-    // Estabelecendo a relação 'muitos para um' com a entidade user
+    // Establish a many-to-one relationship with the User entity
     @ManyToOne(() => User, (user) => user.posts)
     user!: User;
 }

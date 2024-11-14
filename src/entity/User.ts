@@ -15,7 +15,7 @@ export class User {
     @Column({ type: "varchar", length: 100, unique: true })
     email!: string;
 
-    // Estabelecendo a relação 'um para muitos' com Post
+    // Establish a one-to-many relationship with the Post entity
     @OneToMany(() => Post, (post) => post.user)
     posts!: Post[];
 }

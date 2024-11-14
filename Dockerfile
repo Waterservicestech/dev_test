@@ -1,23 +1,23 @@
-# Selecionando o node.js
+# Use an official Node.js runtime as a base image
 FROM node:18
 
-# Selecionando o diretório no container
+# Set the working directory in the container
 WORKDIR /app
 
-# Copiando os arquivos package.json e o package-lock.json
+# Copy the package.json and package-lock.json files
 COPY package*.json ./
 
-# Instalando as dependências
+# Install dependencies
 RUN npm install
 
-# Copiando o resto do código da aplicação
+# Copy the rest of the application code
 COPY . .
 
-# Construindo o código do TypeScript
+# Build the TypeScript code
 RUN npm run build
 
-# Expondo a porta onde a aplicação é executada
+# Expose the port the app runs on
 EXPOSE 3000
 
-# Executando o aplicativo
+# Command to run the application
 CMD ["npm", "start"]

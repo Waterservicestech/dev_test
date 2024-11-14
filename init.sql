@@ -1,6 +1,6 @@
 USE test_db;
 
--- Criando a tabela 'user'
+-- Create the `user` table
 CREATE TABLE IF NOT EXISTS `user` (
     id INT AUTO_INCREMENT PRIMARY KEY,
     firstName VARCHAR(100) NOT NULL,
@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS `user` (
     email VARCHAR(100) NOT NULL
 );
 
--- Criando a tabela 'post'
+-- Create the `post` table
 CREATE TABLE IF NOT EXISTS `post` (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(100) NOT NULL,
