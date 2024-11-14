@@ -11,7 +11,7 @@ export class PostController {
 
         const result = createPostSchema.safeParse(req);
         if (!result.success) {
-            return res.status(400).json({ message: "Validation error", errors: result.error.errors });
+            return res.status(401).json({ message: "Validation error", errors: result.error.errors });
         }
 
         const { title, description, userId } = result.data.body;
