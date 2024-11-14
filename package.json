@@ -1,23 +1,27 @@
 {
-  "name": "node-starter",
-  "private": true,
+  "name": "teste-dev-jr-water",
+  "version": "1.0.0",
+  "main": "index.js",
   "scripts": {
-    "build": "tsc",
-    "start": "node dist/index.js",
-    "dev": "ts-node-dev --respawn src/index.ts",
-    "test": "ts-node src/db.test.ts"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon --exec ts-node src/index.ts"
   },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
   "dependencies": {
-    "express": "^4.18.2",
-    "mysql2": "^3.6.1",
-    "typeorm": "^0.3.17",
-    "reflect-metadata": "^0.1.13",
-    "axios": "^1.5.0"
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "pg": "^8.13.1",
+    "reflect-metadata": "^0.2.2",
+    "typeorm": "^0.3.20"
   },
   "devDependencies": {
-    "@types/express": "^4.17.17",
-    "@types/node": "^20.6.2",
-    "ts-node-dev": "^2.0.0",
-    "typescript": "^5.2.2"
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.9.0",
+    "nodemon": "^3.1.7",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3"
   }
 }
