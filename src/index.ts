@@ -18,10 +18,22 @@ const AppDataSource = new DataSource({
   synchronize: true,
 });
 
-AppDataSource.initialize()
-  .then(() => console.log("Data Source initialized successfully"))
-  .catch((error) => console.error("Data Source initialization error:", error));
+const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
+const initializeDatabase = async () => {
+  await wait(20000);
+  try {
+    await AppDataSource.initialize();
+    console.log("Data Source has been initialized!");
+  } catch (err) {
+    console.error("Error during Data Source initialization:", err);
+    process.exit(1);
+  }
+};
+
+initializeDatabase();
+
+// Endpoint para criar um novo usuário
 app.post('/users', async (req, res) => {
   try {
     const userRepository = AppDataSource.getRepository(User);
@@ -33,6 +45,7 @@ app.post('/users', async (req, res) => {
   }
 });
 
+// Endpoint para criar um novo post
 app.post('/posts', async (req, res) => {
   try {
     const postRepository = AppDataSource.getRepository(Post);
@@ -45,4 +58,6 @@ app.post('/posts', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});

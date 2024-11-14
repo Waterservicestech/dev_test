@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 
+//TODO Crie a entidade de User
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
