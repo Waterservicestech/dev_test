@@ -33,7 +33,6 @@ const initializeDatabase = async () => {
 
 initializeDatabase();
 
-// Endpoint para criar um novo usuário
 app.post('/users', async (req, res) => {
   try {
     const userRepository = AppDataSource.getRepository(User);
@@ -45,7 +44,6 @@ app.post('/users', async (req, res) => {
   }
 });
 
-// Endpoint para criar um novo post
 app.post('/posts', async (req, res) => {
   try {
     const postRepository = AppDataSource.getRepository(Post);
@@ -58,6 +56,4 @@ app.post('/posts', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));

@@ -1,3 +1,4 @@
+version: "3.8"
 
 services:
   api:
@@ -11,7 +12,8 @@ services:
       - DB_NAME=test_db
     depends_on:
       - db
-
+    networks:
+      - dev_test_network
 
   db:
     image: mysql:8.0
@@ -23,6 +25,12 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - dev_test_network
 
 volumes:
   mysql-data:
+
+networks:
+  dev_test_network:
+    driver: bridge
