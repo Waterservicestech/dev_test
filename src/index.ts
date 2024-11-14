@@ -35,6 +35,7 @@ const initializeDatabase = async () => {
 };
 
 initializeDatabase();
+
 // Crie o endpoint de users
 app.post("/users", async (req, res) => {
   const { firstName, lastName, email }: userData = req.body;

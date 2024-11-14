@@ -1,8 +1,10 @@
+CREATE DATABASE IF NOT EXISTS test_db;
+
 USE test_db;
 
 -- TODO Crie a tabela de user
 CREATE TABLE user (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
     firstName VARCHAR(100) NOT NULL,
     lastName VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL
@@ -13,7 +15,7 @@ CREATE TABLE post (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(100) NOT NULL,
     description VARCHAR(100) NOT NULL,
-    userId INT NOT NULL,
+    userId BIGINT NOT NULL,
     FOREIGN KEY (userId) REFERENCES user(id)
 );
 

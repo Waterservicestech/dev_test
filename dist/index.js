@@ -10,7 +10,7 @@ const User_1 = require("./entity/User");
 const Post_1 = require("./entity/Post");
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
-// TODO: is this configuration good?
+
 const AppDataSource = new typeorm_1.DataSource({
     type: "mysql",
     host: process.env.DB_HOST || "localhost",

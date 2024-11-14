@@ -2,7 +2,6 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
 import { Post } from "./Post";
 
 export interface userData {
-  // How to i make those mandatory, and have a maximun lengh of 100?
   firstName: string;
   lastName: string;
   email: string;
@@ -14,13 +13,19 @@ export class User {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column({ length: 100 })
+  @Column({ name: "first_name", type: "varchar", length: 100, nullable: false })
   firstName!: string;
 
-  @Column({ length: 100 })
+  @Column({ name: "last_name", type: "varchar", length: 100, nullable: false })
   lastName!: string;
 
-  @Column({ length: 100, unique: true })
+  @Column({
+    name: "email",
+    type: "varchar",
+    length: 100,
+    nullable: false,
+    unique: true,
+  })
   email!: string;
 
   @OneToMany(() => Post, (post: Post) => post.user)
