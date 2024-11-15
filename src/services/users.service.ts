@@ -9,4 +9,8 @@ export class UserService {
 
     return await this.userRespository.save(newUser);
   }
+
+  async getUserById(userId: number): Promise<User | null> {
+    return await this.userRespository.findOne({ where: { id: userId } });
+  }
 }
