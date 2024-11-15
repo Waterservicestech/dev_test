@@ -14,7 +14,7 @@ const AppDataSource = new DataSource({
   username: process.env.DB_USER || "root",
   password: process.env.DB_PASSWORD || "password",
   database: process.env.DB_NAME || "test_db",
-  entities: [User,Post],
+  entities: [User, Post],
   synchronize: true,
 });
 
@@ -33,12 +33,32 @@ const initializeDatabase = async () => {
 
 initializeDatabase();
 
+// Endpoint para criar um novo usuário
 app.post('/users', async (req, res) => {
-// Crie o endpoint de users
+  const { firstName, lastName, email } = req.body;
+  if (!firstName || !lastName || !email) {
+    return res.status(400).json({ message: 'Missing required fields.' });
+  }
+
+  const userRepository = AppDataSource.getRepository(User);
+  const newUser = userRepository.create({ firstName, lastName, email });
+  await userRepository.save(newUser);
+
+  res.status(201).json(newUser);
 });
 
+// Endpoint para criar um novo post
 app.post('/posts', async (req, res) => {
-// Crie o endpoint de posts
+  const { title, description, userId } = req.body;
+  if (!title || !description || !userId) {
+    return res.status(400).json({ message: 'Missing required fields.' });
+  }
+
+  const postRepository = AppDataSource.getRepository(Post);
+  const newPost = postRepository.create({ title, description, user: { id: userId } });
+  await postRepository.save(newPost);
+
+  res.status(201).json(newPost);
 });
 
 const PORT = process.env.PORT || 3000;
