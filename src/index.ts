@@ -11,7 +11,7 @@ app.use(express.json());
 const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 const initializeDatabase = async () => {
-  await wait(3000);
+  await wait(20000);
   try {
     await AppDataSource.initialize();
     console.log("Data Source has been initialized!");
