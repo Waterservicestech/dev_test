@@ -2,6 +2,8 @@ import 'reflect-metadata';
 import express from 'express';
 import { AppDataSource } from './database';
 import userRoutes from './routes/userRoutes';
+import postRoutes from './routes/postRoutes';
+
 
 const app = express();
 app.use(express.json());
@@ -22,10 +24,7 @@ const initializeDatabase = async () => {
 initializeDatabase();
 
 app.use('/users', userRoutes)
-
-app.post('/posts', async (req, res) => {
-// Crie o endpoint de posts
-});
+app.use('/posts', postRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
