@@ -3,6 +3,10 @@ import express, {Response, Request, response} from 'express';
 import { DataSource } from 'typeorm';
 import { User } from './entity/User';
 import { Post } from './entity/Post';
+import { CreateUserDTO } from './CreateUserDTO';
+import { plainToClass } from 'class-transformer';
+import { validate } from 'class-validator';
+import { CreatePostDTO } from './CreatePostDTO';
 
 const app = express();
 app.use(express.json());
@@ -37,9 +41,15 @@ initializeDatabase();
 
 app.post('/users', async (req: Request, res: Response) => {
   try {
-    const {firstName, lastName, email} = req.body;
+    const userDTO = plainToClass(CreateUserDTO, req.body )
+
+    validate(userDTO).then(errors => {
+      if (errors.length > 0) {
+        return res.status(400).json({ message: 'Invalid Data', errors });
+      }
+    });
     
-    const user = new User(firstName, lastName, email);
+    const user = new User(userDTO.firstName, userDTO.lastName, userDTO.email);
     
     const response = await AppDataSource.getRepository(User).save(user);
   
@@ -52,12 +62,18 @@ app.post('/users', async (req: Request, res: Response) => {
 
 app.post('/posts', async (req: Request, res: Response) => {
   try {
-    const { title , description, userId } = req.body;
+    const postDTO = plainToClass(CreatePostDTO, req.body )
 
-    const userExists = await AppDataSource.getRepository(User).findOne({where: {id: userId}});
+    validate(postDTO).then(errors => {
+      if (errors.length > 0) {
+        return res.status(400).json({ message: 'Invalid Data', errors });
+      }
+    });
+    
+    const userExists = await AppDataSource.getRepository(User).findOne({where: {id: postDTO.userId}});
     if(!userExists) return res.status(404).json({message: 'User id does not exists.'});
   
-    const post = new Post(title, description, userId);
+    const post = new Post(postDTO.title, postDTO.description, postDTO.userId);
   
     const response = await AppDataSource.getRepository(Post).save(post);
   
