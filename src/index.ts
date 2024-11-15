@@ -34,11 +34,75 @@ const initializeDatabase = async () => {
 initializeDatabase();
 
 app.post('/users', async (req, res) => {
-// Crie o endpoint de users
+  {
+    const { firstName, lastName, email } = req.body;
+  
+    if (!firstName) {
+      return res.status(400).json({ error: 'Please provide a first name' });
+    } 
+    if (!lastName) {
+      return res.status(400).json({ error: 'Please provide a last name' });
+    }
+    if (!email) {
+      return res.status(400).json({ error: 'Please provide a email' });
+    }
+    
+    const regexp = new RegExp('^(([^<>()\\[\\]\\\\.,;:\\s@"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@"]+)*)|(".+"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$');
+    if (!regexp.test(email)) {
+      return res.status(400).json({ error: 'Please provide a valid email' });
+    }
+
+    try {
+      const user = new User();
+      user.firstName = firstName;
+      user.lastName = lastName;
+      user.email = email;
+
+      const userRepository = AppDataSource.getRepository(User);
+      const savedUser = await userRepository.save(user);
+
+      res.status(201).json(savedUser);
+
+    } catch (error) {
+      res.status(500).json({ error: 'Error creating user' });
+    }
+  }
 });
 
 app.post('/posts', async (req, res) => {
-// Crie o endpoint de posts
+  const { title, description, userId } = req.body;
+  
+    if (!title) {
+      return res.status(400).json({ error: 'Please provide a title' });
+    } 
+    if (!description) {
+      return res.status(400).json({ error: 'Please provide a description' });
+    }
+    if (!userId) {
+      return res.status(400).json({ error: 'Please provide a userId' });
+    }
+    
+    const userRepository = AppDataSource.getRepository(User);
+    const savedUserId = await userRepository.findOne({ where: { id: userId } });
+
+    if (!savedUserId) {
+      return res.status(400).json({ error: 'Please provide a valid userId' });
+    }
+
+    try {
+      const posts = new Post();
+      posts.title = title;
+      posts.description = description;
+      posts.userId = userId;
+
+      const userRepository = AppDataSource.getRepository(Post);
+      const savedPost = await userRepository.save(posts);
+
+      res.status(201).json(savedPost);
+
+    } catch (error) {
+      res.status(500).json({ error: 'Error creating post' });
+  }
 });
 
 const PORT = process.env.PORT || 3000;
