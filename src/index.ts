@@ -34,11 +34,46 @@ const initializeDatabase = async () => {
 initializeDatabase();
 
 app.post('/users', async (req, res) => {
-// Crie o endpoint de users
+  try {
+    const { firstName, lastName, email } = req.body;
+    
+    if (!firstName || !lastName || !email) {
+      return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    const userRepository = AppDataSource.getRepository(User);
+    const user = userRepository.create({ firstName, lastName, email });
+    const savedUser = await userRepository.save(user);
+    res.status(201).json(savedUser);
+  } catch (error) {
+    console.error('Error creating user:', error);
+    res.status(500).json({ message: 'Error creating user', error });
+  }
 });
 
 app.post('/posts', async (req, res) => {
-// Crie o endpoint de posts
+  try {
+    const postRepository = AppDataSource.getRepository(Post);
+    const userRepository = AppDataSource.getRepository(User);
+    
+    const { userId, title, description } = req.body;
+    
+    if (!title || !description) {
+      return res.status(400).json({ message: 'Title and description are required.' });
+    }
+    
+    const user = await userRepository.findOneBy({ id: userId });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
+    const post = postRepository.create({ title, description, user });
+    const savedPost = await postRepository.save(post);
+    res.status(201).json(savedPost);
+  } catch (error) {
+    console.error('Error creating post:', error);
+    res.status(500).json({ message: 'Error creating post', error });
+  }
 });
 
 const PORT = process.env.PORT || 3000;

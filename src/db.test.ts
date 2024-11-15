@@ -1,9 +1,9 @@
 import axios from 'axios';
 
 const testUser = {
-  firstName: "John",
-  lastName: "Doe",
-  email: "john.doe@example.com"
+  firstName: "Leandro",
+  lastName: "Caracol",
+  email: "leandro.caracol@example.com"
 };
 
 
