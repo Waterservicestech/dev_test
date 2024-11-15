@@ -16,6 +16,6 @@ export class Post {
     @ManyToOne(() => User, (user) => user.posts, {onDelete: "CASCADE"}) //muitos para um '!' obrigartorio
     user: User; 
     constructor() {
-        this.user = new User(); // (se necessário)
+        this.user = new User(); // (se necessário).
       }
 }
