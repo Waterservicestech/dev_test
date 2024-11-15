@@ -35,10 +35,50 @@ initializeDatabase();
 
 app.post('/users', async (req, res) => {
 // Crie o endpoint de users
+    const {firstName, lastName, email} = req.body;
+
+    if (!firstName || !lastName || !email) {
+      return res.status(400).json({error: "Nome, sobrenome e email são obrigatórios"});
+    }
+
+    const user = new User();
+    user.firstName = firstName;
+    user.lastName = lastName;
+    user.email = email;
+
+    try{
+      await AppDataSource.getRepository(User).save(user);
+      return res.status(201).json(user);
+    } catch (error) {
+      return res.status(500).json({message: "Erro ao criar o usuário", error});
+    }
 });
 
 app.post('/posts', async (req, res) => {
 // Crie o endpoint de posts
+    const {title, description, userId} = req.body;
+
+    if (!title || !description || !userId) {
+      return res.status(400).json({error: "Título, descrição e userId são obrigatórios"});
+    }
+    //O usuário existe?
+    const user = await AppDataSource.manager.findOne(User, { where: { id: userId } });
+
+    if (!user) {
+      return res.status(404).json({error: "Usuário não encontrado"});
+    }
+
+    const post = new Post();
+    post.title = title;
+    post.description = description;
+    post.user = user;
+
+    try{
+      await AppDataSource.getRepository(Post).save(post);
+      return res.status(201).json(post);
+    } catch (error) {
+      return res.status(500).json({message: "Erro ao criar o post", error});
+    }
 });
 
 const PORT = process.env.PORT || 3000;
