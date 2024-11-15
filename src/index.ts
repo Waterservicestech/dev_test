@@ -35,6 +35,23 @@ initializeDatabase();
 
 app.post('/users', async (req, res) => {
 // Crie o endpoint de users
+    const {firstName, lastName, email} = req.body;
+
+    if (!firstName || !lastName || !email) {
+      return res.status(400).json({error: "Nome, sobrenome e email são obrigatórios"});
+    }
+
+    const user = new User();
+    user.firstName = firstName;
+    user.lastName = lastName;
+    user.email = email;
+
+    try{
+      await AppDataSource.getRepository(User).save(user);
+      return res.status(201).json(user);
+    } catch (error) {
+      return res.status(500).json({error: "Erro ao criar o usuário", error});
+    }
 });
 
 app.post('/posts', async (req, res) => {
