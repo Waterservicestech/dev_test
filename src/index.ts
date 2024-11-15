@@ -47,7 +47,10 @@ app.post('/users', async (req, res) => {
       return res.status(400).json({ error: 'Please provide a email' });
     }
     
-    // validar email
+    const regexp = new RegExp('^(([^<>()\\[\\]\\\\.,;:\\s@"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@"]+)*)|(".+"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$');
+    if (!regexp.test(email)) {
+      return res.status(400).json({ error: 'Please provide a valid email' });
+    }
 
     try {
       const user = new User();
@@ -79,7 +82,12 @@ app.post('/posts', async (req, res) => {
       return res.status(400).json({ error: 'Please provide a userId' });
     }
     
-    // validar se userId existe
+    const userRepository = AppDataSource.getRepository(User);
+    const savedUserId = await userRepository.findOne({ where: { id: userId } });
+
+    if (!savedUserId) {
+      return res.status(400).json({ error: 'Please provide a valid userId' });
+    }
 
     try {
       const posts = new Post();
@@ -94,7 +102,7 @@ app.post('/posts', async (req, res) => {
 
     } catch (error) {
       res.status(500).json({ error: 'Error creating post' });
-    }
+  }
 });
 
 const PORT = process.env.PORT || 3000;
