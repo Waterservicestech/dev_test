@@ -14,5 +14,5 @@ export class Post {
     description: string = "";
 
     @ManyToOne(() => User, (user) => user.posts, {onDelete: "CASCADE"})
-    user!: User;
+    user!: User; //muitos para um '!' obrigartorio
 }
