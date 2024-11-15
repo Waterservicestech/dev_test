@@ -1,4 +1,4 @@
-import { IsString, Length } from 'class-validator';
+import { IsInt, IsString, Length } from 'class-validator';
 
 export class CreatePostDto {
   @IsString()
@@ -8,4 +8,7 @@ export class CreatePostDto {
   @IsString()
   @Length(1, 1000, { message: 'Description must be between 1 and 1000 characters' })
   description!: string;
+
+  @IsInt()
+  userId!: number;
 }

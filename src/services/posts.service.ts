@@ -10,7 +10,7 @@ export class PostService {
     const user = await this.userService.getUserById(userId);
     
     if (!user) {
-      throw new Error(`User with ID ${userId} not found.`);
+      throw { message: `User with ID ${userId} does not exist`, statusCode: 404 };
     }
 
     const newPost = this.postRespository.create({ 
