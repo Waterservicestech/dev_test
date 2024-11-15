@@ -1,10 +1,11 @@
 import 'reflect-metadata';
-import express from 'express';
+import express, { NextFunction } from 'express';
 import { DataSource } from 'typeorm';
 import { User } from './entity/User';
 import { Post } from './entity/Post';
 import { UserController } from './controllers/users.controller';
 import { PostController } from './controllers/posts.controller';
+import errorHandler from './middlewares/errorHandler';
 
 const app = express();
 app.use(express.json());
@@ -35,15 +36,17 @@ const initializeDatabase = async () => {
 
 initializeDatabase();
 
-app.post('/users', async (req, res) => {
+app.post('/users', async (req, res, next: NextFunction) => {
   const userController = new UserController();
-  await userController.createUser(req, res);
+  await userController.createUser(req, res, next);
 });
 
 app.post('/posts', async (req, res) => {
   const postsController = new PostController();
   await postsController.createPost(req, res);
 });
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
