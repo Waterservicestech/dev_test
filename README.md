@@ -27,7 +27,7 @@ $ docker exec -it <Container Name> /bin/sh
 # execute o comando para executar os testes
 $  npm run test
 ```
-
+- OBS: Espere os logs do banco de dados executarem para o funcionamento do projeto corretamente
 
 ## Contextualização do Desafio
 
