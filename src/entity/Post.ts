@@ -3,14 +3,14 @@ import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 @Entity()
 export class Post {
     @PrimaryGeneratedColumn()
-    id: number
+    id!: number
 
     @Column()
-    title: string
+    title!: string
 
     @Column()
-    description: string
+    description!: string
 
     @Column()
-    userId: number
+    userId!: number
 }
