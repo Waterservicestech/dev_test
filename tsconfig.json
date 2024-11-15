@@ -9,13 +9,7 @@
     "esModuleInterop": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "skipLibCheck": true,
-    "baseUrl": "./src",                                  /* Specify the base directory to resolve non-relative module names. */
-    "paths": {
-      "@entity/*": ["entity/*"],
-      "@user/*" : ["user/*"],
-      "@post/*": ["post/*"]
-    },         
+    "skipLibCheck": true       
   },
   "include": ["src/**/*", "src/db.test.ts"],
   "exclude": ["node_modules"]
