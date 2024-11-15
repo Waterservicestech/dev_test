@@ -3,11 +3,13 @@ import express from 'express';
 import { DataSource } from 'typeorm';
 import { User } from './entity/User';
 import { Post } from './entity/Post';
+import { UserController } from './controllers/users.controller';
+import { PostController } from './controllers/posts.controller';
 
 const app = express();
 app.use(express.json());
 
-const AppDataSource = new DataSource({
+export const AppDataSource = new DataSource({
   type: "mysql",
   host: process.env.DB_HOST || "localhost",
   port: 3306,
@@ -34,11 +36,13 @@ const initializeDatabase = async () => {
 initializeDatabase();
 
 app.post('/users', async (req, res) => {
-// Crie o endpoint de users
+  const userController = new UserController();
+  await userController.createUser(req, res);
 });
 
 app.post('/posts', async (req, res) => {
-// Crie o endpoint de posts
+  const postsController = new PostController();
+  await postsController.createPost(req, res);
 });
 
 const PORT = process.env.PORT || 3000;
