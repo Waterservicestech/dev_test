@@ -12,7 +12,7 @@ services:
       - DB_NAME=test_db
     depends_on:
       - db
-
+    restart: on-failure
 
   db:
     image: mysql:8.0

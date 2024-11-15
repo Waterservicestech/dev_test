@@ -9,7 +9,7 @@
     "esModuleInterop": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "skipLibCheck": true
+    "skipLibCheck": true       
   },
   "include": ["src/**/*", "src/db.test.ts"],
   "exclude": ["node_modules"]
