@@ -9,8 +9,13 @@
     "esModuleInterop": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "skipLibCheck": true
+    "skipLibCheck": true, 
+    "baseUrl": "./src",
+    "paths": {
+    "@models/*": ["src/models/*"],
+    "@utils/*": ["src/utils/*"]
+  }
   },
-  "include": ["src/**/*", "src/db.test.ts"],
+  "include": ["src/**/*", "src/db.test.ts", "src/entity/User.ts", "src/entity/Post.ts"],
   "exclude": ["node_modules"]
 }
