@@ -8,7 +8,7 @@ app.use(express.json());
 const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 const initializeDatabase = async () => {
-  await wait(20000);
+  await wait(3000);
   try {
     await AppDataSource.initialize();
     console.log("Data Source has been initialized!");
@@ -20,7 +20,7 @@ const initializeDatabase = async () => {
 
 initializeDatabase();
 
-app.post('/users', async (req, res) => {
+app.use('/users', async (req, res) => {
 // Crie o endpoint de users
 });
 
