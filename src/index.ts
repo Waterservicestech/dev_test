@@ -34,11 +34,43 @@ const initializeDatabase = async () => {
 initializeDatabase();
 
 app.post('/users', async (req, res) => {
-// Crie o endpoint de users
+
+  // Crie o endpoint de users
+  const { firstName, lastName, email } = req.body;
+
+  if (!firstName || !lastName || !email) {
+    return res.status(400).send('Missing required fields!')
+  }
+
+  const user = new User(firstName, lastName, email);
+
+  try {
+    const savedUser = await AppDataSource.getRepository(User).save(user);
+    res.status(201).json(savedUser);
+  } catch(err) {
+    res.status(500).send('Error creating user');
+  }
+
 });
 
 app.post('/posts', async (req, res) => {
-// Crie o endpoint de posts
+
+  // Crie o endpoint de posts
+  const { title, description, userId } = req.body;
+
+  if (!title || !description || !userId) {
+    return res.status(400).send('Missing required fields!')
+  }
+
+  const post = new Post(title, description, userId);
+
+  try {
+    const savedPost = await AppDataSource.getRepository(Post).save(post);
+    res.status(201).json(savedPost);
+  } catch(err) {
+    res.status(500).send('Error creating post');
+  }
+
 });
 
 const PORT = process.env.PORT || 3000;
