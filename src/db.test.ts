@@ -1,9 +1,9 @@
 import axios from 'axios';
 
 const testUser = {
-  firstName: "John",
-  lastName: "Doe",
-  email: "john.doe@example.com"
+  firstName: "Bruna",
+  lastName: "Borges",
+  email: "brunaborgesrocha668@gmail.com"
 };
 
 
@@ -13,9 +13,9 @@ async function testCreateUser() {
   try {
     const response = await axios.post('http://localhost:3000/users', testUser);
     userId = response.data.id;
-    console.log('User created successfully:', response.data);
+    console.log('Usuário criado com sucesso:', response.data);
   } catch (error) {
-    console.error('Error creating user:', error);
+    console.error('Erro na criação do usuário:', error);
   }
 }
 
@@ -31,9 +31,9 @@ async function testCreatePost() {
 
   try {
     const response = await axios.post('http://localhost:3000/posts', testPost);
-    console.log('Post created successfully:', response.data);
+    console.log('Post criado com sucesso:', response.data);
   } catch (error) {
-    console.error('Error creating post:', error);
+    console.error('Erro ao criar um post:', error);
   }
 }
 
