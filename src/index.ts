@@ -20,7 +20,6 @@ export const AppDataSource = new DataSource({
   database: process.env.DB_NAME || 'test_db',
   entities: [User, Post],
   synchronize: false,
-  logging: process.env.NODE_ENV === 'development' ? true : false,
 });
 
 
