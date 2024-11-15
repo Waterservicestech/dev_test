@@ -1,8 +1,11 @@
 import 'reflect-metadata';
-import express from 'express';
 import { DataSource } from 'typeorm';
 import { User } from './entity/User';
 import { Post } from './entity/Post';
+import express, { Request, Response } from 'express';
+
+
+
 
 const app = express();
 app.use(express.json());
@@ -14,7 +17,7 @@ const AppDataSource = new DataSource({
   username: process.env.DB_USER || "root",
   password: process.env.DB_PASSWORD || "password",
   database: process.env.DB_NAME || "test_db",
-  entities: [User,Post],
+  entities: [User, Post],
   synchronize: true,
 });
 
@@ -34,11 +37,26 @@ const initializeDatabase = async () => {
 initializeDatabase();
 
 app.post('/users', async (req, res) => {
-// Crie o endpoint de users
+  console.log('Recebendo requisição para criar um usuário');
+  try {
+    const userRepository = AppDataSource.getRepository(User);
+    const user = userRepository.create(req.body);
+    const results = await userRepository.save(user);
+    return res.send(results);
+  } catch (err) {
+    return res.status(500).send(err);
+  }
 });
 
 app.post('/posts', async (req, res) => {
-// Crie o endpoint de posts
+  try {
+    const postRepository = AppDataSource.getRepository(Post);
+    const post = postRepository.create(req.body);
+    const results = await postRepository.save(post);
+    return res.send(results);
+  } catch (err) {
+    return res.status(500).send(err);
+  }
 });
 
 const PORT = process.env.PORT || 3000;
