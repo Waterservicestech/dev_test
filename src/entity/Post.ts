@@ -13,6 +13,9 @@ export class Post {
     @Column({type: "varchar", length: 100, nullable: false})
     description: string = "";
 
-    @ManyToOne(() => User, (user) => user.posts, {onDelete: "CASCADE"})
-    user!: User; //muitos para um '!' obrigartorio
+    @ManyToOne(() => User, (user) => user.posts, {onDelete: "CASCADE"}) //muitos para um '!' obrigartorio
+    user: User; 
+    constructor() {
+        this.user = new User(); // (se necessário)
+      }
 }
