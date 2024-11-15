@@ -6,7 +6,7 @@ export class CreatePostDto {
   title!: string;
 
   @IsString()
-  @Length(1, 100, { message: 'Description must be between 1 and 1000 characters' })
+  @Length(1, 100, { message: 'Description must be between 1 and 100 characters' })
   description!: string;
 
   @IsInt()
