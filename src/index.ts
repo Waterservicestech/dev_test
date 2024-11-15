@@ -1,13 +1,16 @@
 import 'reflect-metadata';
-import express from 'express';
+import express, { NextFunction } from 'express';
 import { DataSource } from 'typeorm';
 import { User } from './entity/User';
 import { Post } from './entity/Post';
+import { UserController } from './controllers/users.controller';
+import { PostController } from './controllers/posts.controller';
+import errorHandler from './middlewares/errorHandler';
 
 const app = express();
 app.use(express.json());
 
-const AppDataSource = new DataSource({
+export const AppDataSource = new DataSource({
   type: "mysql",
   host: process.env.DB_HOST || "localhost",
   port: 3306,
@@ -33,13 +36,17 @@ const initializeDatabase = async () => {
 
 initializeDatabase();
 
-app.post('/users', async (req, res) => {
-// Crie o endpoint de users
+app.post('/users', async (req, res, next: NextFunction) => {
+  const userController = new UserController();
+  await userController.createUser(req, res, next);
 });
 
-app.post('/posts', async (req, res) => {
-// Crie o endpoint de posts
+app.post('/posts', async (req, res, next: NextFunction) => {
+  const postsController = new PostController();
+  await postsController.createPost(req, res, next);
 });
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
