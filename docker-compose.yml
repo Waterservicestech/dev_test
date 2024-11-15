@@ -3,8 +3,6 @@ version: '3.8'
 services:
   api:
     build: .
-    volumes: 
-    - .:/usr/src/app
     ports:
       - "3000:3000"
     environment:
