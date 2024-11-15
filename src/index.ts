@@ -1,8 +1,8 @@
 import 'reflect-metadata';
-import express from 'express';
+import express, {Response, Request} from 'express';
 import { DataSource } from 'typeorm';
-import { User } from '@entity/User';
-import { Post } from '@entity/Post';
+import { User } from './entity/User';
+import { Post } from './entity/Post';
 
 const app = express();
 app.use(express.json());
@@ -32,7 +32,7 @@ const initializeDatabase = async () => {
 
 initializeDatabase();
 
-app.post('/users', async (req, res) => {
+app.post('/users', async (req: Request, res: Response) => {
   const {firstName, lastName, email} = req.body;
     
   const user = new User(firstName, lastName, email);
@@ -43,7 +43,7 @@ app.post('/users', async (req, res) => {
 
 });
 
-app.post('/posts', async (req, res) => {
+app.post('/posts', async (req: Request, res: Response) => {
   const { title , description, userId } = req.body;
 
   const post = new Post(title, description, userId);

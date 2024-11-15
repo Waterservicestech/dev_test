@@ -1,18 +1,18 @@
 version: '3.8'
 
 services:
-  # api:
-  #   build: .
-  #   ports:
-  #     - "3000:3000"
-  #   environment:
-  #     - DB_HOST=db
-  #     - DB_USER=root
-  #     - DB_PASSWORD=password
-  #     - DB_NAME=test_db
-  #   depends_on:
-  #     - db
-
+  api:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - DB_HOST=db
+      - DB_USER=root
+      - DB_PASSWORD=password
+      - DB_NAME=test_db
+    depends_on:
+      - db
+    restart: on-failure
 
   db:
     image: mysql:8.0
