@@ -41,9 +41,9 @@ app.post('/users', async (req, res, next: NextFunction) => {
   await userController.createUser(req, res, next);
 });
 
-app.post('/posts', async (req, res) => {
+app.post('/posts', async (req, res, next: NextFunction) => {
   const postsController = new PostController();
-  await postsController.createPost(req, res);
+  await postsController.createPost(req, res, next);
 });
 
 app.use(errorHandler);

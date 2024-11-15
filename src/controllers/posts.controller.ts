@@ -1,10 +1,12 @@
 import { validate } from 'class-validator';
 import { CreatePostDto } from '../dto/createPostDto';
 import { PostService } from '../services/posts.service';
+import { NextFunction } from 'express';
+
 export class PostController {
   private PostService = new PostService();
 
-  async createPost(req: any, res: any) {
+  async createPost(req: any, res: any, next: NextFunction) {
     const { title, description, userId } = req.body;
 
     const createPostDto = new CreatePostDto();
@@ -16,8 +18,9 @@ export class PostController {
     const errors = await validate(createPostDto);
 
     if (errors.length > 0) {
-      return res.status(400).json(errors);
+      return next(errors);
     }
+  
     try {
       const savedPost = await this.PostService.createPost(title, description, userId);
       res.status(201).json(savedPost);
