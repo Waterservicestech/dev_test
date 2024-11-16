@@ -1,5 +1,5 @@
 
-#Implementação do Desafio
+# Implementação do desafio
 
 Criação das Tabelas no init.sql
 Criei as tabelas user e post no arquivo SQL, incluindo todos os campos especificados e o relacionamento entre elas. Isso garante que os dados sejam armazenados de forma organizada e que o banco de dados suporte as operações necessárias.
