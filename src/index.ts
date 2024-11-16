@@ -14,7 +14,7 @@ const AppDataSource = new DataSource({
   username: process.env.DB_USER || "root",
   password: process.env.DB_PASSWORD || "password",
   database: process.env.DB_NAME || "test_db",
-  entities: [User,Post],
+  entities: [User, Post],
   synchronize: true,
 });
 
@@ -34,11 +34,56 @@ const initializeDatabase = async () => {
 initializeDatabase();
 
 app.post('/users', async (req, res) => {
-// Crie o endpoint de users
+
+  const { firstName, lastName, email } = req.body;
+
+  try {
+    const userRepository = AppDataSource.getRepository(User);
+    const user = new User();
+
+    user.firstName = firstName;
+    user.lastName = lastName;
+    user.email = email;
+
+    await userRepository.save(user);
+
+    res.status(201).json(user);
+  } catch (error) {
+    console.error('Erro ao criar usuário: ', error);
+    return res.status(500).json({ message: 'Erro ao criar usuário: ', error });
+  }
 });
 
 app.post('/posts', async (req, res) => {
-// Crie o endpoint de posts
+  
+  const { title, description, userId } = req.body;
+  const userRepository = AppDataSource.getRepository(User);
+  const postRepository = AppDataSource.getRepository(Post);
+
+  try {
+    if (userId === null) {
+      return res.status(422).json({ message: 'O id do usuário não pode ser nulo' })
+    }
+    const user = await userRepository.findOneBy({ id: userId });
+    const post = new Post();
+
+
+    if (!user) {
+      return res.status(404).json({ message: 'Usuário não encontrado.' })
+    } else {
+      post.title = title;
+      post.description = description;
+      post.user = user;
+
+      await postRepository.save(post);
+      return res.status(201).json(post);
+    }
+
+  } catch (error) {
+    console.error('Erro ao tentar criar o post: ', error);
+    return res.status(500).json({ message: 'Erro ao tentar criar o post: ', error});
+  }
+
 });
 
 const PORT = process.env.PORT || 3000;
