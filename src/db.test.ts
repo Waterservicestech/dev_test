@@ -6,7 +6,6 @@ const testUser = {
   email: "john.doe@example.com"
 };
 
-
 let userId: number | null = null;
 
 async function testCreateUser() {
@@ -26,9 +25,7 @@ const testPost = {
 };
 
 async function testCreatePost() {
-
   testPost.userId = userId;
-
   try {
     const response = await axios.post('http://localhost:3000/posts', testPost);
     console.log('Post created successfully:', response.data);
