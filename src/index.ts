@@ -1,47 +1,51 @@
-import 'reflect-metadata';
 import express from 'express';
-import { DataSource } from 'typeorm';
-import { User } from './entity/User';
-import { Post } from './entity/Post';
+import userRoutes from './routes/usersRoutes';
+import postRoutes from './routes/postsRoutes';
+import { AppDataSource } from './config/data-source';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
 app.use(express.json());
 
-const AppDataSource = new DataSource({
-  type: "mysql",
-  host: process.env.DB_HOST || "localhost",
-  port: 3306,
-  username: process.env.DB_USER || "root",
-  password: process.env.DB_PASSWORD || "password",
-  database: process.env.DB_NAME || "test_db",
-  entities: [User,Post],
-  synchronize: true,
-});
+const PORT = Number(process.env.PORTSERVER) || 3000;
 
-const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+// Função para inicializar o banco de dados e iniciar o servidor
+const initializeDatabaseAndServer = async () => {
+  let attempts = 0;
+  const maxAttempts = 5;
 
-const initializeDatabase = async () => {
-  await wait(20000);
-  try {
-    await AppDataSource.initialize();
-    console.log("Data Source has been initialized!");
-  } catch (err) {
-    console.error("Error during Data Source initialization:", err);
-    process.exit(1);
+  while (attempts < maxAttempts) {
+    try {
+      // Inicializando o banco de dados
+      await AppDataSource.initialize();
+      console.log("Data Source has been initialized!");
+
+      // Iniciar o servidor após o banco de dados ser inicializado
+      app.use(userRoutes);
+      app.use(postRoutes);
+
+      app.listen(PORT, () => {
+        console.log(`Server is running on port ${PORT}`);
+      });
+
+      break; // Sai do loop se a inicialização for bem-sucedida
+    } catch (err) {
+      attempts++;
+      console.error(`Attempt ${attempts} failed to initialize the database:`, err);
+
+      if (attempts === maxAttempts) {
+        console.error("Max attempts reached. Could not connect to the database.");
+        process.exit(1); // Finaliza o processo se não for possível se conectar após várias tentativas
+      }
+
+      // Aguarda 5 segundos antes de tentar novamente
+      console.log("Retrying in 5 seconds...");
+      await new Promise(resolve => setTimeout(resolve, 5000));
+    }
   }
 };
 
-initializeDatabase();
-
-app.post('/users', async (req, res) => {
-// Crie o endpoint de users
-});
-
-app.post('/posts', async (req, res) => {
-// Crie o endpoint de posts
-});
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+// Chama a função para inicializar o banco de dados e iniciar o servidor
+initializeDatabaseAndServer();
