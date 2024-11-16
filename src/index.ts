@@ -34,13 +34,18 @@ const initializeDatabase = async () => {
 initializeDatabase();
 
 app.post('/users', async (req, res) => {
-// Crie o endpoint de users
+  const userRepository = AppDataSource.getRepository(User);
+  const user = userRepository.create(req.body);
+  await userRepository.save(user);
+  res.status(201).send(user);
 });
 
 app.post('/posts', async (req, res) => {
-// Crie o endpoint de posts
+  const postRepository = AppDataSource.getRepository(Post);
+  const post = postRepository.create(req.body);
+  await postRepository.save(post);
+  res.status(201).send(post);
 });
-
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
