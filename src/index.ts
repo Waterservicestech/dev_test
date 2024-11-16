@@ -14,14 +14,13 @@ const AppDataSource = new DataSource({
   username: process.env.DB_USER || "root",
   password: process.env.DB_PASSWORD || "password",
   database: process.env.DB_NAME || "test_db",
-  entities: [User,Post],
+  entities: [User, Post],
   synchronize: true,
 });
 
 const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 const initializeDatabase = async () => {
-  await wait(20000);
   try {
     await AppDataSource.initialize();
     console.log("Data Source has been initialized!");
@@ -34,11 +33,43 @@ const initializeDatabase = async () => {
 initializeDatabase();
 
 app.post('/users', async (req, res) => {
-// Crie o endpoint de users
+  const { firstName, lastName, email } = req.body;
+  try {
+    const user = new User();
+    user.firstName = firstName;
+    user.lastName = lastName;
+    user.email = email;
+
+    await AppDataSource.manager.save(user);
+    res.status(201).json(user);
+  } catch (error) {
+    console.error({ message: "Erro ao criar usuário" });
+    res.status(500).json({ message: "Erro ao criar usuário" });
+  }
 });
 
 app.post('/posts', async (req, res) => {
-// Crie o endpoint de posts
+  const { title, description, userId } = req.body;
+
+  if (!title) { return res.status(400).json({ message: "O campo 'titulo' é obrigatório" });}
+
+  try {
+    const user = await AppDataSource.manager.findOne(User, { where: { id: userId } });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    const post = new Post();
+    post.title = title;
+    post.description = description;
+    post.user = user;
+
+    await AppDataSource.manager.save(post);
+    res.status(201).json(post);
+  } catch (error) {
+    console.error("Erro ao criar o post", error);
+    res.status(500).json({ message: "Erro ao criar post" })
+  }
 });
 
 const PORT = process.env.PORT || 3000;
