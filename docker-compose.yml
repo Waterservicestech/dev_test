@@ -1,8 +1,8 @@
-version: '3.8'
 
 services:
   api:
     build: .
+    container_name: api-container
     ports:
       - "3000:3000"
     environment:
@@ -16,6 +16,7 @@ services:
 
   db:
     image: mysql:8.0
+    container_name: db-container
     environment:
       - MYSQL_ROOT_PASSWORD=password
       - MYSQL_DATABASE=test_db
