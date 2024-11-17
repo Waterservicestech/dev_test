@@ -12,7 +12,7 @@ services:
       - DB_NAME=test_db
     depends_on:
       - db
-
+    entrypoint: ["./wait-for-it.sh", "db:3306", "--", "npm", "run", "dev"]
 
   db:
     image: mysql:8.0
