@@ -1,0 +1,17 @@
+{
+    "name": "Existing Docker Compose (Extend)",
+    "dockerComposeFile": [
+        "../docker-compose.yml",
+        "docker-compose.yml"
+    ],
+    "service": "api",
+    "workspaceFolder": "/usr/src/app",
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "terminal.integrated.defaultProfile.linux": "bash"
+            }
+        }
+    },
+    "postCreateCommand": "npm ci"
+}

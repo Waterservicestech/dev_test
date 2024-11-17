@@ -1,0 +1,18 @@
+FROM node:18.0.0-slim
+
+ENV DOCKERIZE_VERSION=v0.8.0
+ENV NODE_ENV=development
+
+RUN apt-get update \
+    && apt-get install -y wget \
+    && wget -O - https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz | tar xzf - -C /usr/local/bin \
+    && apt-get autoremove -yqq --purge wget && rm -rf /var/lib/apt/lists/*
+
+USER node
+
+WORKDIR /usr/src/app
+
+EXPOSE 3000
+
+ENTRYPOINT [ "dockerize", "-wait", "tcp://db:3306", "-timeout", "20s" ]
+CMD [ "tail", "-f", "/dev/null" ]
