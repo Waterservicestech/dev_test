@@ -1,29 +1,33 @@
-version: '3.8'
-
 services:
   api:
     build: .
+    networks:
+      - node_net
     ports:
-      - "3000:3000"
+      - "${PORT:-3000}:${PORT-3000}"
     environment:
-      - DB_HOST=db
-      - DB_USER=root
-      - DB_PASSWORD=password
-      - DB_NAME=test_db
+      - DB_PORT=${DB_PORT:-3306}
+      - DB_HOST=${DB_HOST:-db}
+      - DB_USER=${DB_USER:-root}
+      - DB_PASSWORD=${DB_PASSWORD:-password}
+      - DB_NAME=${DB_NAME:-test_db}
     depends_on:
       - db
-
-
   db:
     image: mysql:8.0
+    networks:
+      - node_net
     environment:
-      - MYSQL_ROOT_PASSWORD=password
-      - MYSQL_DATABASE=test_db
-    ports:
-      - "3306:3306"
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD:-password}
+      - MYSQL_DATABASE=${DB_NAME:-test_db}
     volumes:
       - mysql-data:/var/lib/mysql
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
+networks:
+  node_net:
+    driver: bridge
+
 volumes:
   mysql-data:
+    driver: local

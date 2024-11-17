@@ -1,0 +1,37 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: .devcontainer/Dockerfile.dev
+    networks:
+      - node_net
+    ports:
+      - "3000:3000"
+    environment:
+      - DB_PORT=3306
+      - DB_HOST=db
+      - DB_USER=root
+      - DB_PASSWORD=password
+      - DB_NAME=test_db
+    depends_on:
+      - db
+    volumes:
+      - ./:/usr/src/app:cached
+  db:
+    image: mysql:8.0
+    networks:
+      - node_net
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=test_db
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+networks:
+  node_net:
+    driver: bridge
+
+volumes:
+  mysql-data:
+    driver: local

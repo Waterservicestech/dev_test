@@ -1,0 +1,178 @@
+{
+    "openapi": "3.0.0",
+    "tags": [
+        {
+            "name": "Users",
+            "description": "Users routes"
+        },
+        {
+            "name": "Posts",
+            "description": "Posts routes"
+        }
+    ],
+    "info": {
+        "title": "dev_test API Documentation",
+        "description": "This is an simple API to create users and posts",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/users": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Create a user",
+                "description": "Create a new user",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "firstName": {
+                                        "type": "string",
+                                        "maximum": 100,
+                                        "nullable": false
+                                    },
+                                    "lastName": {
+                                        "type": "string",
+                                        "maximum": 100,
+                                        "nullable": false
+                                    }
+                                },
+                                "example": {
+                                    "firstName": "John",
+                                    "lastName": "Do",
+                                    "email": "test@gmail.com"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer"
+                                        },
+                                        "email": {
+                                            "type": "string"
+                                        },
+                                        "firstName": {
+                                            "type": "string"
+                                        },
+                                        "lastName": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "example": {
+                                        "id": "1",
+                                        "firstName": "John",
+                                        "lastName": "Do",
+                                        "email": "test@gmail.com"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "User already exists"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+
+        "/posts": {
+          "post": {
+            "tags": ["Posts"],
+            "summary": "create a post",
+            "description": "Create a new post",
+            "requestBody": {
+              "content": {
+                "application/json": {
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "title": {
+                                "type": "string",
+                                "maximum": 100,
+                                "nullable": false
+                            },
+                            "description": {
+                                "type": "string",
+                                "maximum": 100,
+                                "nullable": false
+                            },
+                            "userId": {
+                                "type": "number",
+                                "nullable": false
+                            }
+                        },
+                        "example": {
+                            "userId": "1",
+                            "title": "Post 1",
+                            "description": "#Watertechservices"
+                        }
+                    }
+                }
+              }
+            },
+            "responses": {
+              "201": {
+                "description": "Created",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "integer"
+                                },
+                                "title": {
+                                    "type": "string"
+                                },
+                                "description": {
+                                    "type": "string"
+                                },
+                                "user": {
+                                    "type": "object"
+                                }
+                            },
+                            "example": {
+                                "id": "2",
+                                "title": "Post 1",
+                                "description": "#Watertechservices",
+                                "user": {
+                                    "id": "1",
+                                    "firstName": "John",
+                                    "lastName": "Do",
+                                    "email": "test@gmail.com"
+                                }
+                            }
+                        }
+                    }
+                }
+              },
+              "400": {
+                "description": "User does not exists"
+                },
+              "500": {
+                "description": "Internal server error"
+              }
+            }
+          }
+        }
+    }
+  }
