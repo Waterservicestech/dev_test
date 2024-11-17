@@ -15,7 +15,7 @@ export class CreateUserService {
         const userExists = await this.usersRepository.findByEmail(email);
 
         if (userExists) {
-            throw new HttpException('User already exists', 401);
+            throw new HttpException('User already exists', 400);
         }
 
         const user = await this.usersRepository.create({ email, firstName, lastName });

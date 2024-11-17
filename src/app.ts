@@ -1,9 +1,13 @@
 import express, { Express, NextFunction, Request, Response } from 'express'
+import swaggerUI from 'swagger-ui-express';
 import 'express-async-errors';
+import Youch from 'youch'
 
 import { initializeDatabase } from './database';
 import { routes } from './routes'
 import { HttpException } from './@shared/errors/HttpException'
+
+import swaggerFile from './swagger.json'
 
 initializeDatabase()
 
@@ -23,7 +27,8 @@ class App {
     }
 
     private routes() {
-        this.server.use(routes)
+      this.server.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerFile));
+      this.server.use(routes)
     }
 
     private middlewares() {
@@ -39,7 +44,10 @@ class App {
             next: NextFunction
           ) => {
             if (process.env.NODE_ENV === 'development') {
-              return response.send(err)
+              const youch = new Youch(err, request)
+              const html = await youch.toHTML()
+
+              return response.send(html);
             }
             
             if (err instanceof HttpException) {
