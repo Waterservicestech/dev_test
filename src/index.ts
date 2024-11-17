@@ -1,22 +1,12 @@
-import 'reflect-metadata';
-import express from 'express';
-import { DataSource } from 'typeorm';
-import { User } from './entity/User';
-import { Post } from './entity/Post';
+import "reflect-metadata";
+import express from "express";
+import { DataSource } from "typeorm";
+import { User } from "./entity/User";
+import { Post } from "./entity/Post";
+import { AppDataSource } from "./config/dbconfig";
 
 const app = express();
 app.use(express.json());
-
-const AppDataSource = new DataSource({
-  type: "mysql",
-  host: process.env.DB_HOST || "localhost",
-  port: 3306,
-  username: process.env.DB_USER || "root",
-  password: process.env.DB_PASSWORD || "password",
-  database: process.env.DB_NAME || "test_db",
-  entities: [User,Post],
-  synchronize: true,
-});
 
 const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -33,15 +23,29 @@ const initializeDatabase = async () => {
 
 initializeDatabase();
 
-app.post('/users', async (req, res) => {
-// Crie o endpoint de users
+// Endpoint para gerenciar usuários
+app.get("/users", async (_, res) => {
+    const users = await AppDataSource.getRepository(User).find({ relations: ["posts"] });
+    res.json(users);
 });
 
-app.post('/posts', async (req, res) => {
-// Crie o endpoint de posts
+app.post("/users", async (req, res) => {
+    const user = await AppDataSource.getRepository(User).save(req.body);
+    res.status(201).json(user);
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+// Endpoint para gerenciar posts
+app.get("/posts", async (_, res) => {
+    const posts = await AppDataSource.getRepository(Post).find({ relations: ["user"] });
+    res.json(posts);
+});
+
+app.post("/posts", async (req, res) => {
+    const post = await AppDataSource.getRepository(Post).save(req.body);
+    res.status(201).json(post);
+});
+
+// Conectar ao banco e iniciar o servidor
+AppDataSource.initialize().then(() => {
+    app.listen(3000, () => console.log("Servidor rodando na porta 3000"));
 });
