@@ -3,19 +3,21 @@ import axios from 'axios';
 const testUser = {
   firstName: "John",
   lastName: "Doe",
-  email: "john.doe@example.com"
+  email: `john.doe${Date.now()}@example.com`
 };
 
 
 let userId: number | null = null;
 
+
 async function testCreateUser() {
   try {
     const response = await axios.post('http://localhost:3000/users', testUser);
     userId = response.data.id;
-    console.log('User created successfully:', response.data);
+    return true;
   } catch (error) {
     console.error('Error creating user:', error);
+    return false;
   }
 }
 
@@ -37,9 +39,24 @@ async function testCreatePost() {
   }
 }
 
+async function waitForServer(maxAttempts = 5, delayMs = 5000) {
+  for (let i = 0; i < maxAttempts; i++) {
+    try {
+      await axios.get('http://localhost:3000/health');
+      return true;
+    } catch (error) {
+      await new Promise(resolve => setTimeout(resolve, delayMs));
+    }
+  }
+  return false;
+}
+
 async function init() {
-  await testCreateUser();
-  await testCreatePost();
+  await waitForServer();
+  const userCreated = await testCreateUser();
+  if (userCreated) {
+    await testCreatePost();
+  }
 }
 
 init();
