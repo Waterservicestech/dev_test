@@ -52,8 +52,19 @@ Execute os seguintes comandos para testar a aplicação:
    ```
 
    Dentro do container, execute o teste:
+
+   <strong>Para o teste simples:<strong>
    ```bash
    npm test
+   ```
+   <strong>Para os testes unitários:<strong>
+   ```bash
+   npm run test:unit
+   ```
+
+   <strong>Para os testes de integração:<strong>
+   ```bash
+   npm run test:e2e
    ```
 
 ## 6º Passo: Crie um fork desse repositório e submita o código preenchido nele.

@@ -10,6 +10,7 @@ services:
       - DB_USER=root
       - DB_PASSWORD=password
       - DB_NAME=test_db
+      - PORT=3000
     depends_on:
       - db
 
