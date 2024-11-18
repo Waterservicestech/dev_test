@@ -56,5 +56,5 @@ Execute os seguintes comandos para testar a aplicação:
    npm test
    ```
 
-## 6º Passo: Crie um fork desse repositório e submita o código preenchido nele.
-Crie um Pull Request para a brach master nos enviando o código
+## 6º Passo: Crie um fork desse repositório e submeta o código preenchido nele.
+Crie um Pull Request para a brach master nos enviando o código.
