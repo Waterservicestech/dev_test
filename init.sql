@@ -1,5 +1,18 @@
 USE test_db;
 
---TODO Crie a tabela de user;
+CREATE TABLE IF NOT EXISTS user (
+  id INT AUTO_INCREMENT,
+  firstName VARCHAR(100) NOT NULL,
+  lastName VARCHAR(100) NOT NULL,
+  email VARCHAR(100) NOT NULL,
+  PRIMARY KEY (id)
+);
 
---TODO Crie a tabela de posts;
+CREATE TABLE IF NOT EXISTS post (
+  id INT AUTO_INCREMENT,
+  title VARCHAR(100) NOT NULL,
+  description VARCHAR(100) NOT NULL,
+  userId INT NOT NULL,
+  PRIMARY KEY (id),
+  CONSTRAINT fk_user_post FOREIGN KEY (userId) REFERENCES user (id)
+);

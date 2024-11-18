@@ -1,0 +1,1 @@
+export const getEnv = (name: string, defaultValue: string = '') => process.env[name] || defaultValue

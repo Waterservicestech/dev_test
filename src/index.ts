@@ -1,22 +1,11 @@
-import 'reflect-metadata';
 import express from 'express';
-import { DataSource } from 'typeorm';
-import { User } from './entity/User';
-import { Post } from './entity/Post';
+import 'reflect-metadata';
+import AppDataSource from './data-source';
+import makeUserController from './factories/user-factory';
+import makePostController from './factories/post-factory';
 
 const app = express();
 app.use(express.json());
-
-const AppDataSource = new DataSource({
-  type: "mysql",
-  host: process.env.DB_HOST || "localhost",
-  port: 3306,
-  username: process.env.DB_USER || "root",
-  password: process.env.DB_PASSWORD || "password",
-  database: process.env.DB_NAME || "test_db",
-  entities: [User,Post],
-  synchronize: true,
-});
 
 const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -33,13 +22,12 @@ const initializeDatabase = async () => {
 
 initializeDatabase();
 
-app.post('/users', async (req, res) => {
-// Crie o endpoint de users
-});
+const userController = makeUserController()
+const postController = makePostController();
 
-app.post('/posts', async (req, res) => {
-// Crie o endpoint de posts
-});
+app.post('/users', async (req, res) => userController.store(req, res));
+
+app.post('/posts', async (req, res) => postController.store(req, res));
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
