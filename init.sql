@@ -15,4 +15,5 @@ CREATE TABLE post (
     description VARCHAR(100) NOT NULL,
     userId INT NOT NULL,
     FOREIGN KEY (userId) REFERENCES user(id)
+
 );
