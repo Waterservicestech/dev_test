@@ -10,8 +10,13 @@ services:
       - DB_USER=root
       - DB_PASSWORD=password
       - DB_NAME=test_db
+    volumes:
+      - ./src:/code/src
+    networks:
+      - network
     depends_on:
       - db
+
 
 
   db:
@@ -24,6 +29,12 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - network
 
 volumes:
   mysql-data:
+
+networks:
+  network:
+    driver: bridge
