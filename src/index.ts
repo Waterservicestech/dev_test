@@ -34,11 +34,41 @@ const initializeDatabase = async () => {
 initializeDatabase();
 
 app.post('/users', async (req, res) => {
-// Crie o endpoint de users
+  const userRepository = AppDataSource.getRepository(User);
+  const { firstName, lastName, email } = req.body;
+
+  try {
+    const newUser = userRepository.create({ firstName, lastName, email });
+    await userRepository.save(newUser);
+    res.status(201).json(newUser);
+  } catch (error) {
+    if (error === 'ER_DUP_ENTRY') {
+      return res.status(400).json({ error: 'Email already exists' });
+    }
+    console.error(error);
+    res.status(500).json({ error: 'Error creating user' });
+  }
 });
 
 app.post('/posts', async (req, res) => {
-// Crie o endpoint de posts
+  const postRepository = AppDataSource.getRepository(Post);
+  const { title, description, userId } = req.body;
+
+  try {
+    const userRepository = AppDataSource.getRepository(User);
+    const user = await userRepository.findOneBy({ id: userId });
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const newPost = postRepository.create({ title, description, user });
+    await postRepository.save(newPost);
+    res.status(201).json(newPost);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error creating post' });
+  }
 });
 
 const PORT = process.env.PORT || 3000;
