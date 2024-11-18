@@ -10,9 +10,13 @@ services:
       - DB_USER=root
       - DB_PASSWORD=password
       - DB_NAME=test_db
+    
+    
     depends_on:
-      - db
-
+      db:
+        condition: service_healthy # Garantindo a inicialização do banco e dos comandos necessários
+    
+    entrypoint: ["npm", "run", "dev"]
 
   db:
     image: mysql:8.0
@@ -20,10 +24,16 @@ services:
       - MYSQL_ROOT_PASSWORD=password
       - MYSQL_DATABASE=test_db
     ports:
-      - "3306:3306"
+      - "33062:3306" #Usando a porta 33062 pois meu pc usa a 33061 como entrada padrão do mysql fora do WSL2
     volumes:
       - mysql-data:/var/lib/mysql
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysql", "-uroot", "-ppassword", "-e", "SELECT 1"] #comandos necessários
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
 
 volumes:
   mysql-data:
