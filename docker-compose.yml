@@ -12,6 +12,8 @@ services:
       - DB_NAME=test_db
     depends_on:
       - db
+    stdin_open: true
+    tty: true  
 
 
   db:

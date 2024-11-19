@@ -1,60 +1,95 @@
-# Descrição do Teste para a Vaga de Desenvolvedor Jr.
+# Dev Test API - Node.js
 
-## Contextualização do Desafio
+## Table of Contents
 
-Este teste foi desenvolvido para avaliar suas habilidades práticas em tarefas comuns do dia a dia de um desenvolvedor júnior. Através deste desafio, você terá a oportunidade de demonstrar seu conhecimento na criação de banco de dados, definição de relacionamentos entre tabelas e entidades, além de aplicar boas práticas de desenvolvimento em um ambiente Docker. O objetivo é simular uma situação real de desenvolvimento de uma aplicação simples, onde você deverá criar as estruturas necessárias e garantir que o sistema esteja funcionando corretamente por meio de testes. A conclusão bem-sucedida desta tarefa refletirá seu domínio de conceitos importantes para a vaga.
+- [Overview](#overview)
+- [Requirements](#requirements)
+- [Features](#features)
+- [Usage](#usage)
+    - [Run Server](#run-server)
+    - [Test](#test)
+- [Endpoints](#endpoints)
 
-## 1º Passo: Criação das Tabelas no `init.sql`
+## Overview
 
-Dentro do arquivo `init.sql`, crie as seguintes tabelas:
+This is a [Node.js](https://nodejs.org/en) API project built with [TypeScript](https://www.typescriptlang.org/) and [Express](https://expressjs.com/), designed to manage **users**, **posts**, and their relationships. The API interacts with a [MySQL](https://www.mysql.com/) database using [TypeORM](http://typeorm.io/) for data management. Both the API and the database are containerized using [Docker](https://www.docker.com/).
 
-### Tabela `user`
-- **id** – Tipo: `Int`, autoincremental, chave primária (PK).
-- **firstName** – Tipo: `Varchar(100)`, não nulo.
-- **lastName** – Tipo: `Varchar(100)`, não nulo.
-- **email** – Tipo: `Varchar(100)`, não nulo.
+## Requirements
 
-### Tabela `post`
-- **id** – Tipo: `Int`, autoincremental, chave primária (PK).
-- **title** – Tipo: `Varchar(100)`, não nulo.
-- **description** – Tipo: `Varchar(100)`, não nulo.
-- **userId** – Tipo: `Int`, não nulo (chave estrangeira referenciando a tabela `user`).
+For this project, the following (essential for execution) resources were used:
+ - [Node.js](https://nodejs.org/)
+ - [Docker](https://www.docker.com/) and [Docker Compose](https://docs.docker.com/compose/)
 
----
+## Features
 
-## 2º Passo: Criação das Entidades `User` e `Post`
+- **Create a user**: A user could be created with `firstName`, `lastName` and `email`. The email field is unique. 
+- **Create a post**: A post could be created with `title`, `description` and `userId`. The `userId` establishes a relationship with a user.
 
-Dentro da pasta `src/Entity`, crie as entidades correspondentes às tabelas `User` e `Post`.
+## Usage
 
----
+### Run Server
 
-## 3º Passo: Configurar endpoints `users` e `posts`
+Build and start containers.
 
-Dentro de `src/index.ts`, configure dois endpoints `users` & `posts`
+```
+docker-compose up --build -d
+```
 
----
+The server will run at port `3000` or the specified port.
 
-## 4º Passo: Configuração do Dockerfile
+### Test
 
-Configure o `Dockerfile` da aplicação para garantir que ela seja construída corretamente no ambiente Docker.
+First, access API:
 
----
+```
+docker exec -it dev_test-api-1 /bin/sh
+```
 
-## 5º Passo: Teste da Aplicação
+And then, run test:
 
-Execute os seguintes comandos para testar a aplicação:
+```
+npm test
+```
 
-1. **Subir a aplicação utilizando Docker Compose**:
-   ```bash
-   docker compose up --build
-   docker exec -it <Container Name> /bin/sh
-   
-   ```
-
-   Dentro do container, execute o teste:
-   ```bash
-   npm test
-   ```
-
-## 6º Passo: Crie um fork desse repositório e submita o código preenchido nele.
-Crie um Pull Request para a brach master nos enviando o código
+## Endpoints
+- **POST** - `/users`: Create a new user
+    - Data should be sent in the request body in JSON format:
+        ```
+         {
+            "firstName": "John",
+            "lastName": "Doe",
+            "email": "john.doe@example.com"
+         }
+        ```
+    - The return will be the created user object:
+        ```
+         {
+            "firstName": "John",
+            "lastName": "Doe",
+            "email": "john.doe@example.com",
+            "id": 1
+         }
+        ```
+- **POST** - `/posts`: Create a new post
+    - Data should be sent in the request body in JSON format:
+        ```
+         {
+            "title": "Some title",
+            "description": "some description",
+            "user": "1"
+         }
+        ```
+    - The return will be the created post object:
+        ```
+         {
+            "title": "Some title",
+            "description": "some description",
+            "user": {
+               "id": 1,
+               "firstName": "John",
+               "lastName": "Doe",
+               "email": "john.doe@example.com"
+            },
+            "id": 1
+         }
+        ```
