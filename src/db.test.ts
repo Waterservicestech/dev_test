@@ -1,11 +1,10 @@
 import axios from 'axios';
 
 const testUser = {
-  firstName: "John",
-  lastName: "Doe",
-  email: "john.doe@example.com"
+  firstName: 'John',
+  lastName: 'Doe',
+  email: 'john.doe@example.com',
 };
-
 
 let userId: number | null = null;
 
@@ -20,13 +19,12 @@ async function testCreateUser() {
 }
 
 const testPost = {
-  title: "Some message",
-  description: "Some description",
-  userId: null as number | null
+  title: 'Some message',
+  description: 'Some description',
+  userId: null as number | null,
 };
 
 async function testCreatePost() {
-
   testPost.userId = userId;
 
   try {

@@ -1,0 +1,36 @@
+name: CI - Docker Compose Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Docker
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v2
+
+      # Step 3: Build and run services with Docker Compose
+      - name: Build and run Docker Compose
+        run: |
+          docker-compose -f docker-compose.yml up --build -d
+
+      # Step 4: Run `npm test` in the app container
+      - name: Run npm test
+        run: |
+          docker-compose -f docker-compose.yml exec app npm test
+
+      # Step 5: Clean up after tests
+      - name: Stop and remove Docker Compose services
+        run: docker-compose -f docker-compose.test.yml down
